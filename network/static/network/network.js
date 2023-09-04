@@ -30,7 +30,7 @@ function user_profile() {
     document.querySelector('#post_list').style.display="none";
     document.querySelector('#user_following').style.display="none";
     document.querySelector('#user_profile').style.display="block";
-      unfollow();
+     unfollow();
 };
 
 function user_following() {
@@ -38,7 +38,7 @@ function user_following() {
     document.querySelector('#post_list').style.display="none";
     document.querySelector('#user_profile').style.display="none";
     document.querySelector('#user_following').style.display="block";};
-    
+
 
 function unfollow() {
     const name=document.querySelector("#user_name");
