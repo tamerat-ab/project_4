@@ -1,0 +1,94 @@
+{% extends "network/layout.html" %}
+{% load static %}
+
+{% block body %}
+
+
+{% if user.is_authenticated %}
+<div id="create_post_div">
+  <form id="post_form" action="{% url 'create_post' %}" method="post">
+      {% csrf_token %}
+    
+      <textarea name="text_field" id="textarea"  placeholder="write your post here"></textarea> <br>
+      <button id="form_button" type="submit">post</button>
+     </form>
+  
+  </div>
+{% endif %}  
+   
+<div id="post_list">
+      
+      {% for post in posts_list %}
+       <a id="user_link" href="{% url 'profile' post.user.id %} ">{{post.user.username}}</a> <br>
+      <h3>{{post.text_field}} </h3> <br>
+      <h3>{{post.date_created_On}} </h3> <br>
+      <h3>{{post.is_liked}}  {{post.count}}  </h3> <br>
+      <h3>{{post.comment}} </h3> <br>
+     <a id="edit_link" href="{% url 'edit' post.id %}">edit</a>
+     <a id="{{post.id}}" href=""> like</a>
+     <a id="{{post.id}}" href=""> unlike</a><br>
+      <!-- <a href=""></a>{{post.user.id}} </h3> -->
+       {% endfor%}
+  
+</div>
+
+<div id="user_following">
+        {% for query in followed_users%}
+        {% for post in query %}
+        <h2>{{post.user.username}} </h2> <br>
+        <h2>{{post.text_field}} </h2> <br>
+        {% endfor%}
+        {% endfor%}
+</div>
+     
+<div id="user_profile">
+      
+      <div id="follow_button">
+        {% if users_id %}
+        <h1>{{f_id}}</h1>
+        <h1 id="user_name">{{user_name}} </h1>
+        <a id="follow_link" href="{% url 'follow' users_id %}">Follow</a>   
+        {% endif %}
+         
+      </div>
+        <h1>replace</h1>
+        {% for post in user_posts %}
+        <h3>{{post.user.username}} </h3> <br>
+        <h3>{{post.text_field}} </h3> <br>
+        <h3>{{post.date_created_On}} </h3> <br>
+        <h3>{{post.is_liked}}  {{post.count}}  </h3> <br>
+        <h3>{{post.comment}} </h3> 
+        {% endfor%}
+</div>
+
+
+<div id=edit_post>
+  <!-- {% for post in edit_post %}
+  <form id="post_form" action="{% url 'update' post.id %}" method="PUT">
+    {% csrf_token %}
+
+    <textarea name="text_field" id="textarea" >{{post.text_field}}</textarea> <br>
+    <button data-edit_post="form_button" type="submit">update</button>
+   </form>
+<h1> post: {{changed_post}}  </h1>
+{% endfor %} -->
+
+          {% for post in edit_post %}
+          <form id="post_edit" action="" >
+            {% csrf_token %}
+
+            <textarea name="text_field" id="textarea" >{{post.text_field}}</textarea> <br>
+            <button data-edit_post="{{post.id}}"  type="submit">update</button>
+          </form>
+        <h1> post: {{changed_post}}  </h1>
+        {% endfor %}
+        <h2 id="response_message"></h2>
+</div>
+    
+ 
+
+{% endblock %}
+
+{% block script %}
+<script src="{% static 'network/network.js '%}"></script>
+{% endblock %}
