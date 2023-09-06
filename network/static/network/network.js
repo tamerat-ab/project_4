@@ -1,10 +1,12 @@
 document.addEventListener("DOMContentLoaded",() =>{
     document.querySelector('#create_post').onclick=()=>{create_post();};
     document.querySelector('#following').onclick=()=>{user_following();};
-    document.querySelector('#profile_link').onclick=()=>{user_profile()};
+    // document.querySelector(`#{a.setdata.post_id}`).onclick=()=>{user_profile()};
+    user_profile();
     document.querySelector('#edit_link').onclick=()=>{edit()};
     document.querySelector('#post_edit').onsubmit=()=>{update();};
     // document.querySelector('#profile_link').onclick=()=>{unfollow()};
+   
     posts();
     
    
@@ -25,13 +27,19 @@ function create_post() {
 
 };
 
-function user_profile() {
-    document.querySelector('#create_post_div').style.display="none";
-    document.querySelector('#post_list').style.display="none";
-    document.querySelector('#user_following').style.display="none";
-    document.querySelector('#user_profile').style.display="block";
+document.addEventListener('DOMContentLoaded', function(){
+// function user_profile() {
+    
+    const user_prof=document.querySelector('#profile_link');
+    user_prof.onclick= function() {
+        //  document.querySelector('#create_post_div').style.display="none";
+        // document.querySelector('#post_list').style.display="none";
+        // document.querySelector('#user_following').style.display="none";
+        // document.querySelector('#user_profile').style.display="block";
+    
+    }
      unfollow();
-};
+})
 
 function user_following() {
     document.querySelector('#create_post_div').style.display="none";

@@ -5,7 +5,7 @@ from django.shortcuts import render
 from django.urls import reverse
 from django.core.paginator import Paginator, EmptyPage, PageNotAnInteger
 from django.contrib.auth.decorators import login_required
-from .models import User, Posts,Following,Follower
+from .models import User, Posts,Following,Follower,Like
 from .forms import Postform
 import json 
 
@@ -96,8 +96,10 @@ def profile(request,user_id):
     return render(request, 'network/index.html', {'user_posts':user_posts, 'user_name':user_name, 'users_id':user_id})
     # return HttpResponseRedirect(reverse( 'network/index.html', args={user_posts:user_posts}))
     
-def follow(request, users_id):
+def follow(request, followed_id):
     user=request.user
+    user_id=user.id
+    follower_id=user.follower_id
     following=Following(user=user,users_id=users_id)
     following.save()
     return HttpResponseRedirect(reverse('index'))
@@ -144,21 +146,39 @@ def update(request,id):
         return JsonResponse( {'error': 'Invalid'}, status=400)
     
     
-def like(request,id):
+def like(request,liking_id,post_id):
+   if request.method =='put':
+    like_count_new=json.loads(request.body)['like_count']
     user=request.user
-    request.method='PUT'
-    text_field=request.PUT.get('text')
-    post=Posts.objects.filter(user=user,id=id)
-    post.text_field= text_field
-    post.save()
-def unlike(request,id):
-    user=request.user
-    request.method='PUT'
-    text_field=request.PUT.get('text')
-    post=Posts.objects.filter(user=user,id=id)
-    post.text_field= text_field
-    post.save()
+    liking_user=user.liking_user
+    id1=user.id
+    like_count=Like.objects,filter(user=id1,post=post_id)
+    like_count.like_count
 
+    if liking_user==liking_id:
+        return JsonResponse( {'user':'exists'}, status=400)
+    else:
+        like_count.like_count+=like_count_new
+        like_count.save()
+        return JsonResponse( {'like_count':'updated'}, status=200)
+       
+
+def unlike(request,liking_id,post_id):
+    if request.method =='put':
+        like_count_new=json.loads(request.body)['like_count']
+        user=request.user
+        liking_user=user.liking_user
+        id1=user.id
+        like_count=Like.objects,filter(user=id1,post=post_id)
+        like_count.like_count
+
+        if liking_user==liking_id:
+            return JsonResponse( {'user':'exists'}, status=400)
+        else:
+            like_count.like_count-=like_count_new
+            like_count.save()
+            return JsonResponse( {'like_count':'updated'}, status=200)
+    
 
 
 
