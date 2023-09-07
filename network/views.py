@@ -5,8 +5,9 @@ from django.shortcuts import render
 from django.urls import reverse
 from django.core.paginator import Paginator, EmptyPage, PageNotAnInteger
 from django.contrib.auth.decorators import login_required
-from .models import User, Posts,Following,Follower
+from .models import User, Posts,Following,Like, Follower
 from .forms import Postform
+from django.core.exceptions import ObjectDoesNotExist
 import json 
 
 
@@ -74,9 +75,9 @@ def create_post(request):
         post_list.save()
         return HttpResponseRedirect(reverse("index"))
 
-def follow():
+# def follow():
 
-    pass
+#     pass
 def post_list(request):
     #  if request.method == "POST":
        posts=Posts.objects.all()
@@ -98,15 +99,32 @@ def profile(request,user_id):
     
 def follow(request, users_id):
     user=request.user
-    following=Following(user=user,users_id=users_id)
-    following.save()
-    return HttpResponseRedirect(reverse('index'))
+    user_id=user.id
+    try:
+        followed_user=Following.objects.filter(user=user_id, users_id=users_id)
+        if followed_user.exists():
+            return JsonResponse({'followed_id':'id_exits'})
+    except: followed_user.DoesNotExist
+
+    else: 
+        user_followed=User.objects.filter(id=users_id)[0]
+        followed=Follower(user=user_followed, follower_id=user_id)
+        followed.save()
+
+        following=Following(user=user,users_id=users_id)
+        following.save()
+        # return HttpResponseRedirect(reverse('index'))
+        count_following =len(Following.objects.filter(user=user_id))
+        count_follower=len(Follower.objects.filter(user=user_id))
+        return render(request,'network/index.html',{'following':count_following,'follower':count_follower})
    
 
 def unfollow(request, users_id):
     user=request.user
-    unfollow=Following.objects.filter(user=user,users_id=users_id)
+    user_id=user.id
+    unfollow=Following.objects.filter(user=user_id,users_id=users_id)
     unfollow.delete()
+    return HttpResponseRedirect(reverse('index'))
 
 
 
@@ -132,33 +150,60 @@ def edit(request,id):
 
 def update(request,id):
     user=request.user
-    if request.method=='PUT':
-        data=json.loads(request.body)
-        if data.get(text_field) is not None:
-            text_field=data.get('text_field')
-            post=Posts.objects.filter(user=user,id=id)
-            post.text_field= text_field
-            post.save()
-            return JsonResponse( {'message':'Successfully updated'},status=200)
-    else:
+    if request.method=='POST':
+        text_field=request.POST.get('text_field')
+        post=Posts.objects.get(user=user,id=id)
+        post.text_field=text_field
+        post.save()
+    
+    # if request.method=='PUT':
+    #     data=json.loads(request.body)
+    #     if data.get(text_field) is not None:
+    #         text_field=data.get('text_field')
+    #         post=Posts.objects.filter(user=user,id=id)
+    #         post.text_field= text_field
+    #         post.save()
+    #         return JsonResponse( {'message':'Successfully updated'},status=200)
+    # else:
         return JsonResponse( {'error': 'Invalid'}, status=400)
     
     
-def like(request,id):
-    user=request.user
-    request.method='PUT'
-    text_field=request.PUT.get('text')
-    post=Posts.objects.filter(user=user,id=id)
-    post.text_field= text_field
-    post.save()
-def unlike(request,id):
-    user=request.user
-    request.method='PUT'
-    text_field=request.PUT.get('text')
-    post=Posts.objects.filter(user=user,id=id)
-    post.text_field= text_field
-    post.save()
+def like(request,post_id):
 
+    user=request.user
+    user_liked=User.objects.filter(posts=post_id)[0]
+    post=Posts.objects.filter(id=post_id)[0]
+
+    try:
+        get_user=Like.objects.filter(user=user_liked,post=post,liking_user=user.id)
+        if get_user.exists():
+            return JsonResponse({'user': 'liked'})
+    except: get_user.DoesNotExist()
+   
+    else:
+        liked=Like(user=user_liked,post=post,liking_user=user.id)
+        liked.save()
+        like_count=len(Like.objects.filter(user=user))+1
+        return JsonResponse( {'like_count':like_count}, status=200)
+
+
+def unlike(request,post_id):
+    user=request.user
+    user_liked=User.objects.filter(posts=post_id)[0]
+    post=Posts.objects.filter(id=post_id)[0]
+
+    try:
+        get_user=Like.objects.filter(user=user_liked,post=post,liking_user=user.id)
+        if get_user.exists():
+           get_user.delete()
+           return JsonResponse({'user':'disliked'})
+    except: get_user.DoesNotExist()
+            
+   
+   
+
+
+    
 
 
 

@@ -1,44 +1,64 @@
 document.addEventListener("DOMContentLoaded",() =>{
     document.querySelector('#create_post').onclick=()=>{create_post();};
     document.querySelector('#following').onclick=()=>{user_following();};
-    document.querySelector('#profile_link').onclick=()=>{user_profile()};
+    // document.querySelector(`#{a.setdata.post_id}`).onclick=()=>{user_profile()};
+    // user_profile();
     document.querySelector('#edit_link').onclick=()=>{edit()};
     document.querySelector('#post_edit').onsubmit=()=>{update();};
     // document.querySelector('#profile_link').onclick=()=>{unfollow()};
+   
     posts();
     
    
 });
 
 function posts() {
+   id= Button.setdata.edit_post
+   console.log(id);
     document.querySelector('#create_post_div').style.display="none";
-    document.querySelector('#post_list').style.display="block";
     document.querySelector('#user_following').style.display="none";
     document.querySelector('#user_profile').style.display="none";
+    document.querySelector('#post_list').style.display="block";
 };
 
 function create_post() {
-    document.querySelector('#create_post_div').style.display="block";
     document.querySelector('#post_list').style.display="none";
     document.querySelector('#user_following').style.display="none";
     document.querySelector('#user_profile').style.display="none";
+    document.querySelector('#create_post_div').style.display="block";
 
 };
 
-function user_profile() {
-    document.querySelector('#create_post_div').style.display="none";
-    document.querySelector('#post_list').style.display="none";
-    document.querySelector('#user_following').style.display="none";
-    document.querySelector('#user_profile').style.display="block";
-      unfollow();
-};
+
+// function user_profile() {
+
+    
+//     const user_profile=document.querySelector('#profile_link');
+//     user_profile.addEventListener('click',(e) => {
+//         // id_1=document.querySelector(`#${page}`)
+//        const id=e.target.getAttribute('id');
+//         if (e.target.innerText==='like'){
+//         fetch(`{id}/profile`)}
+//         if (e.target.innerText==='unlike'){
+//         fetch(`{id}/profile`)}
+//         if (e.target.getAttribute('id')==='profile_link'){
+
+//         document.querySelector('#create_post_div').style.display="none";
+//         document.querySelector('#post_list').style.display="none";
+//         document.querySelector('#user_following').style.display="none";
+//         document.querySelector('#user_profile').style.display="block";
+//           }
+//     });
+    
+//      unfollow();
+// }
 
 function user_following() {
     document.querySelector('#create_post_div').style.display="none";
     document.querySelector('#post_list').style.display="none";
     document.querySelector('#user_profile').style.display="none";
     document.querySelector('#user_following').style.display="block";};
-    
+
 
 function unfollow() {
     const name=document.querySelector("#user_name");
@@ -60,8 +80,7 @@ function update() {
         // const id=document.querySelectorAll('button').forEach(function(button){button.setdata.edit_post})
         const id=Button.setdata.edit_post
         const text_field=document.querySelector('#textarea').value
-        console.log(id);
-        console.log(text_field)
+        
         fetch(`${id}/update`,
         {   method:'put',
             body:JSON.stringify({text_field:text_field})})
