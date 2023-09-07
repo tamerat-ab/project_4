@@ -1,5 +1,5 @@
 from django.contrib import admin
-from .models import Posts, Follower,Following, User
+from .models import Posts,Following, User, Follower, User
 
 # Register your models here.
 admin.site.register(Posts)

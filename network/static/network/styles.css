@@ -1,8 +1,8 @@
 #form_button 
-{background-color:blue;}
+{background-color:rgb(85, 85, 114);}
 
 .profile
-{background-color:blue;}
+{background-color:rgb(97, 97, 155);}
 
 #textarea
     {
@@ -12,5 +12,11 @@
         justify-content: flex-start;
         align-items: stretch;
         align-content: stretch;
-        width:100%
+        width:90%
     }
+#post_list{
+    background-color:green;
+    border: 10px solid;
+    padding: 25px;
+    width:90%;
+}

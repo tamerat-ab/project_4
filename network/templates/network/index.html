@@ -6,6 +6,9 @@
 
 {% if user.is_authenticated %}
 <div id="create_post_div">
+  count_following  {{following }}
+  count_follower {{follower}}
+
   <form id="post_form" action="{% url 'create_post' %}" method="post">
       {% csrf_token %}
     
@@ -17,18 +20,17 @@
 {% endif %}  
    
 <div id="post_list">
-      
+
       {% for post in posts_list %}
        
-      <a id="profile_link" href="{% url 'profile' post.user.id %} ">{{post.user.username}}</a> <br>
+      <a data-post="profile_link" href="{% url 'profile' post.user.id %} ">{{post.user.username}}</a> <br>
       <h3>{{post.text_field}} </h3> <br>
       <h3>{{post.date_created_On}} </h3> <br>
-      <h3>{{post.is_liked}}  {{post.count}}  </h3> <br>
       <h3>{{post.comment}} </h3> <br>
-     <a id="edit_link" href="{% url 'edit' post.id %}">edit</a>
-     <a id="{{post.id}}" href=""> like</a>
-     <a id="{{post.id}}" href=""> unlike</a><br>
-      <!-- <a href=""></a>{{post.user.id}} </h3> -->
+     <a id="{{post.id}}" href="{% url 'edit' post.id %}">edit</a>
+     <a id="{{post.id}}" href="{% url 'like' post.id %}"> like</a>
+     <a id="{{post.id}}" href="{% url 'unlike' post.id %}"> unlike</a><br>
+    
        {% endfor%}
   
 </div>
@@ -52,29 +54,43 @@
         {% endif %}
          
       </div>
+
+      <div id="unfollow_button">
+        {% if users_id %}
+        <h1>{{f_id}}</h1>
+       
+        <a id="follow_link" href="{% url 'unfollow' users_id %}">Unfollow</a>   
+        {% endif %}
+         
+      </div> 
         <h1>replace</h1>
+        
         {% for post in user_posts %}
         <h3>{{post.user.username}} </h3> <br>
         <h3>{{post.text_field}} </h3> <br>
         <h3>{{post.date_created_On}} </h3> <br>
-        <h3>{{post.is_liked}}  {{post.count}}  </h3> <br>
         <h3>{{post.comment}} </h3> 
         {% endfor%}
+
+    
 </div>
 
 
+
 <div id=edit_post>
-  <!-- {% for post in edit_post %}
-  <form id="post_form" action="{% url 'update' post.id %}" method="PUT">
+  {% for post in edit_post %}
+  <form id="post_form" action="{% url 'update' post.id %}" method="post">
     {% csrf_token %}
 
     <textarea name="text_field" id="textarea" >{{post.text_field}}</textarea> <br>
     <button data-edit_post="form_button" type="submit">update</button>
    </form>
 <h1> post: {{changed_post}}  </h1>
-{% endfor %} -->
+{% endfor %}
+       
 
-          {% for post in edit_post %}
+
+          <!-- {% for post in edit_post %}
           <form id="post_edit" action="" >
             {% csrf_token %}
 
@@ -83,7 +99,7 @@
           </form>
         <h1> post: {{changed_post}}  </h1>
         {% endfor %}
-        <h2 id="response_message"></h2>
+        <h2 id="response_message"></h2> -->
 </div>
     
  
