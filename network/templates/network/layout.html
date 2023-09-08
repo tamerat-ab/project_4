@@ -11,10 +11,133 @@
         <script src="{% static 'network/network.js' %}"></script>
         {% block script%}
         {% endblock%}
+
+        <style>
+ #nav-bar{background-color: blue; color: brown;}           
+body {
+    background-color: green;
+}
+#form_button 
+{background-color:rgb(85, 85, 114);
+ margin-left: 3%;
+ margin-top: 0px;
+ margin-bottom:20px;
+ width:15%;}
+
+.profile
+{background-color:rgb(97, 97, 155);}
+
+#textarea
+    {
+        display: flex;
+        flex-direction: row;
+        flex-wrap: nowrap;
+        justify-content: flex-start;
+        align-items: stretch;
+        align-content: stretch;
+        width:95%;
+        margin:auto;
+        margin-bottom: 5px;
+        border: 1px solid;
+        border-radius: 10px;
+    }
+#post_list,#post_list-1, #user_following{
+    background-color:rgb(142, 223, 248);
+    border: 2px solid;
+    padding: 25px;
+    width:95%;
+    margin: auto;
+    border-radius: 10px;
+    opacity:0.8;
+}
+#comment-box{
+    display: flex;
+    flex-direction: row;
+    flex-wrap: nowrap;
+    justify-content: flex-start;
+    align-items: stretch;
+    align-content: stretch;
+    width:95%;
+    margin:auto;
+    margin-bottom: 5px;
+    border: 0px solid;
+    border-radius: 10px;
+    
+    border: 5px solid;
+
+    }
+#comment-1{
+    position: relative; 
+    width: 93%;
+
+    
+}
+#comment-2{
+    position: relative; 
+    width: 7%;
+    border-radius: 10px solid;
+    
+}
+#comment-area{
+   
+    width:95%;
+    border: 1px solid;
+    height: 100%;
+}
+
+/* #user_profile{
+    display: flex;
+    flex-direction: column;
+    flex-wrap: nowrap;
+    justify-content: flex-start;
+    align-items: stretch;
+    align-content: stretch;
+    width:95%;
+    margin:auto;
+    background-color: aquamarine;
+   
+} */
+#follow-unfollow{
+    display: flex;
+    flex-direction: row;
+    flex-wrap: nowrap;
+    justify-content: flex-start;
+    align-items: stretch;
+    align-content: stretch;
+    width:95%;
+    margin:auto;
+    background-color: aquamarine;
+   
+}
+
+#follow-button{
+    position: relative;
+    width: 35%;
+    color: rgb(77, 42, 165);
+}
+
+#unfollow-button{
+    position: relative;
+    width:3%;
+    color: brown;
+    margin-left: -100px;
+    margin-bottom: 10px;
+}
+
+#user-name-div{
+    position: relative;
+    width: 95%;
+    color: rgb(75, 42, 165);
+    margin:auto;
+    margin-left:12px;
+
+}
+
+</style>
     </head>
     <body>
 
-        <nav class="navbar navbar-expand-lg navbar-light bg-light">
+        <nav id="nav-bar" class="navbar navbar-expand-lg navbar-light bg-light">
             <a class="navbar-brand" href="#">Network</a>
           
             <div>
