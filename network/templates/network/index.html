@@ -1,5 +1,6 @@
 {% extends "network/layout.html" %}
 {% load static %}
+{% static 'network/styles.css' %}
 
 {% block body %}
 
@@ -19,59 +20,83 @@
   </div>
 {% endif %}  
    
-<div id="post_list">
+
 
       {% for post in posts_list %}
-       
-      <a data-post="profile_link" href="{% url 'profile' post.user.id %} ">{{post.user.username}}</a> <br>
-      <h3>{{post.text_field}} </h3> <br>
-      <h3>{{post.date_created_On}} </h3> <br>
-      <h3>{{post.comment}} </h3> <br>
-     <a id="{{post.id}}" href="{% url 'edit' post.id %}">edit</a>
-     <a id="{{post.id}}" href="{% url 'like' post.id %}"> like</a>
-     <a id="{{post.id}}" href="{% url 'unlike' post.id %}"> unlike</a><br>
-    
-       {% endfor%}
-  
-</div>
-
-<div id="user_following">
-        {% for query in followed_users%}
-        {% for post in query %}
-        <h2>{{post.user.username}} </h2> <br>
-        <h2>{{post.text_field}} </h2> <br>
-        {% endfor%}
-        {% endfor%}
-</div>
-     
-<div id="user_profile">
-      
-      <div id="follow_button">
-        {% if users_id %}
-        <h1>{{f_id}}</h1>
-        <h1 id="user_name">{{user_name}} </h1>
-        <a id="follow_link" href="{% url 'follow' users_id %}">Follow</a>   
-        {% endif %}
-         
+      <div id="post_list">
+            <a data-post="profile_link" href="{% url 'profile' post.user.id %} ">{{post.user.username}}</a> <br>
+            <h3>{{post.text_field}} </h3> <br>
+            <h3>{{post.date_created_On}} </h3> <br>
+            <h3>{{post.comment}} </h3> <br>
+            <a id="{{post.id}}" href="{% url 'edit' post.id %}">edit</a>
+            <a id="{{post.id}}" href="{% url 'like' post.id %}"> like</a>
+            <a id="{{post.id}}" href="{% url 'unlike' post.id %}"> unlike</a><br>
       </div>
 
-      <div id="unfollow_button">
-        {% if users_id %}
-        <h1>{{f_id}}</h1>
-       
-        <a id="follow_link" href="{% url 'unfollow' users_id %}">Unfollow</a>   
-        {% endif %}
+      <div id="comment-box">
+           
+              <div id=comment-1> <textarea name="" id="comment-area" cols="" rows="" placeholder="comment"></textarea> </div> 
+              <div id="comment-2">post</div>
          
-      </div> 
-        <h1>replace</h1>
+      </div>
+       {% endfor%}
+  
+
+
+       
+        {% for query in followed_users%}     
+        {% for post in query %}
+        <div id="user_following">
+        <h2>{{post.user.username}} </h2> <br>
+        <h2>{{post.text_field}} </h2> <br>
+        <a id="{{post.id}}" href="{% url 'edit' post.id %}">edit</a>
+        <a id="{{post.id}}" href="{% url 'like' post.id %}"> like</a>
+        <a id="{{post.id}}" href="{% url 'unlike' post.id %}"> unlike</a><br>
+        </div>
+        {% endfor%} 
+        {% endfor%}
         
-        {% for post in user_posts %}
+     
+<div id="user_profile">
+    
+            {% if users_id %}
+          <div id="user-name-div">
+            <h1 id="user_name">{{user_name}} </h1>
+          </div>
+      <div id="follow-unfollow">
+          <div id="follow-button">
+            <a id="follow_link" href="{% url 'follow' users_id %}">Follow</a>   
+            {% endif %}  
+          </div>
+
+          <div id="unfollow-button">
+            {% if users_id %}
+            <a id="follow_link" href="{% url 'unfollow' users_id %}">Unfollow</a>   
+            {% endif %}    
+          </div> 
+    
+      </div>
+
+      {% for post in user_posts %}
+      <div id="post_list-1">
         <h3>{{post.user.username}} </h3> <br>
         <h3>{{post.text_field}} </h3> <br>
         <h3>{{post.date_created_On}} </h3> <br>
         <h3>{{post.comment}} </h3> 
-        {% endfor%}
+     
 
+      <a id="{{post.id}}" href="{% url 'edit' post.id %}">edit</a>
+      <a id="{{post.id}}" href="{% url 'like' post.id %}"> like</a>
+      <a id="{{post.id}}" href="{% url 'unlike' post.id %}"> unlike</a><br>
+      </div>
+
+       <div id="comment-box">
+     
+        <div id=comment-1> <textarea name="" id="comment-area" cols="" rows="" placeholder="comment"></textarea> </div> 
+        <div id="comment-2">post</div>
+   
+       </div>
+      {% endfor%}
     
 </div>
 
