@@ -5,7 +5,7 @@ from django.shortcuts import render
 from django.urls import reverse
 from django.core.paginator import Paginator, EmptyPage, PageNotAnInteger
 from django.contrib.auth.decorators import login_required
-from .models import User, Posts,Following,Like, Follower
+from .models import User, Posts,Following,Like, Follower,Comment
 from .forms import Postform
 from django.core.exceptions import ObjectDoesNotExist
 import json 
@@ -103,21 +103,23 @@ def follow(request, users_id):
     try:
         followed_user=Following.objects.filter(user=user_id, users_id=users_id)
         if followed_user.exists():
-            return JsonResponse({'followed_id':'id_exits'})
+            return HttpResponseRedirect(reverse('profile', args=(users_id,)))
+            # return JsonResponse({'followed_id':'id_exits'})
     except: followed_user.DoesNotExist
 
     else: 
         user_followed=User.objects.filter(id=users_id)[0]
         followed=Follower(user=user_followed, follower_id=user_id)
         followed.save()
-
         following=Following(user=user,users_id=users_id)
         following.save()
-        # return HttpResponseRedirect(reverse('index'))
+        return HttpResponseRedirect(reverse('profile', args=(users_id,)))
+def count_follow(request,user_id):
         count_following =len(Following.objects.filter(user=user_id))
+        count=Following.objects.filter(user=user_id)
         count_follower=len(Follower.objects.filter(user=user_id))
-        return render(request,'network/index.html',{'following':count_following,'follower':count_follower})
-   
+        return render(request,'network/index.html',{'following':'count_following','follower':'count_follower','count':count})
+
 
 def unfollow(request, users_id):
     user=request.user
@@ -198,6 +200,26 @@ def unlike(request,post_id):
            get_user.delete()
            return JsonResponse({'user':'disliked'})
     except: get_user.DoesNotExist()
+
+def comment(request,post_id):
+    if request.method == 'POST':
+        comment=request.POST.get('comment')
+        user=request.user
+        users=User.objects.filter(posts=post_id)[0]
+        post=Posts.objects.filter(id=post_id)[0]
+        comment=Comment(user=users,post=post,comment=comment)
+        comment.save()
+        try:
+            # comments=Comment.objects.filter(post=post,user=users) 
+            return render(request,'network/index.html',{'comments':'comments'})
+            
+        except:return JsonResponse({'doesnotexist':'does not exist'})
+        return render(request,'network/index.html',{'comments':'comments'})
+        
+
+           
+
+
             
    
    

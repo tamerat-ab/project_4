@@ -7,8 +7,7 @@
 
 {% if user.is_authenticated %}
 <div id="create_post_div">
-  count_following  {{following }}
-  count_follower {{follower}}
+ 
 
   <form id="post_form" action="{% url 'create_post' %}" method="post">
       {% csrf_token %}
@@ -21,29 +20,40 @@
 {% endif %}  
    
 
+<div id="all-posts">
+          {% for post in posts_list %}
+              <div id="post_list">
+                      <a data-post="profile_link" href="{% url 'profile' post.user.id %} ">{{post.user.username}}</a> <br>
+                      <h3>{{post.text_field}} </h3> <br>
+                      <h3>{{post.date_created_On}} </h3> <br>
+                      <a id="{{post.id}}" href="{% url 'edit' post.id %}">edit</a>
+                      <a id="{{post.id}}" href="{% url 'like' post.id %}"> like</a>
+                      <a id="{{post.id}}" href="{% url 'unlike' post.id %}"> unlike</a><br>
+              </div>
 
-      {% for post in posts_list %}
-      <div id="post_list">
-            <a data-post="profile_link" href="{% url 'profile' post.user.id %} ">{{post.user.username}}</a> <br>
-            <h3>{{post.text_field}} </h3> <br>
-            <h3>{{post.date_created_On}} </h3> <br>
-            <h3>{{post.comment}} </h3> <br>
-            <a id="{{post.id}}" href="{% url 'edit' post.id %}">edit</a>
-            <a id="{{post.id}}" href="{% url 'like' post.id %}"> like</a>
-            <a id="{{post.id}}" href="{% url 'unlike' post.id %}"> unlike</a><br>
-      </div>
+              <div id="comment-box">
+                      <form id="comment-form" action="{% url 'comment' post.id %}" method="post">
+                        {% csrf_token %}
+                      <div id=comment-1> <textarea name="comment" id="comment-area" cols="" rows="2" placeholder="comment"></textarea> </div> 
+                      <div id="comment-2"><input type="submit" value="post" name="" id="comment-input"></div>
+                    
+                      </form>
+                    
+              </div>
 
-      <div id="comment-box">
-           
-              <div id=comment-1> <textarea name="" id="comment-area" cols="" rows="" placeholder="comment"></textarea> </div> 
-              <div id="comment-2">post</div>
-         
-      </div>
-       {% endfor%}
-  
+              <div id="comment-post">
+                      {{comments}}
+                      {% for comment in comments %}
+                      <h1>comment{{ comment.comment}} </h1>
+                      {% endfor %}
+              </div>
+              
+              
+        {% endfor%}
+</div>
 
 
-       
+<div id="following-post">     
         {% for query in followed_users%}     
         {% for post in query %}
         <div id="user_following">
@@ -55,15 +65,23 @@
         </div>
         {% endfor%} 
         {% endfor%}
-        
+</div>       
      
 <div id="user_profile">
-    
+        <div id="follow-count">
+          count_following  {{following }}
+          count_follower {{follower}}
+          count {{count}}
+          </div>
+    {% for post in user_posts %}
+          
+
+
             {% if users_id %}
           <div id="user-name-div">
             <h1 id="user_name">{{user_name}} </h1>
           </div>
-      <div id="follow-unfollow">
+       <div id="follow-unfollow">
           <div id="follow-button">
             <a id="follow_link" href="{% url 'follow' users_id %}">Follow</a>   
             {% endif %}  
@@ -77,7 +95,6 @@
     
       </div>
 
-      {% for post in user_posts %}
       <div id="post_list-1">
         <h3>{{post.user.username}} </h3> <br>
         <h3>{{post.text_field}} </h3> <br>
@@ -90,29 +107,31 @@
       <a id="{{post.id}}" href="{% url 'unlike' post.id %}"> unlike</a><br>
       </div>
 
-       <div id="comment-box">
+      <div id="comment-box">
+        <form id="comment-form" action="{% url 'comment' post.id %}" method="post">
+         {% csrf_token %}
+       <div id=comment-1> <textarea name="comment" id="comment-area" cols="" rows="2" placeholder="comment"></textarea> </div> 
+       <div id="comment-2"><input type="submit" value="post" name="" id="comment-input"></div>
      
-        <div id=comment-1> <textarea name="" id="comment-area" cols="" rows="" placeholder="comment"></textarea> </div> 
-        <div id="comment-2">post</div>
-   
-       </div>
+       </form>
+      </div>
       {% endfor%}
     
 </div>
 
 
 
-<div id=edit_post>
-  {% for post in edit_post %}
-  <form id="post_form" action="{% url 'update' post.id %}" method="post">
-    {% csrf_token %}
+<div id=edit-post>
+      {% for post in edit_post %}
+      <form id="post_form" action="{% url 'update' post.id %}" method="post">
+        {% csrf_token %}
 
-    <textarea name="text_field" id="textarea" >{{post.text_field}}</textarea> <br>
-    <button data-edit_post="form_button" type="submit">update</button>
-   </form>
-<h1> post: {{changed_post}}  </h1>
-{% endfor %}
-       
+        <textarea name="text_field" id="textarea" >{{post.text_field}}</textarea> <br>
+        <button data-edit_post="form_button" type="submit">update</button>
+      </form>
+      <h1> post: {{changed_post}}  </h1>
+      {% endfor %}
+            
 
 
           <!-- {% for post in edit_post %}

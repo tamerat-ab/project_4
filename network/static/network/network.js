@@ -1,10 +1,10 @@
-document.addEventListener("DOMContentLoaded",() =>{
-    document.querySelector('#create_post').onclick=()=>{create_post();};
-    document.querySelector('#following').onclick=()=>{user_following();};
+document.addEventListener("DOMContentLoaded", () =>{
+    // document.querySelector('#create_post').onclick=()=>{create_post();};
+    // document.querySelector('#following').onclick=()=>{user_following();};
     // document.querySelector(`#{a.setdata.post_id}`).onclick=()=>{user_profile()};
     // user_profile();
-    document.querySelector('#edit_link').onclick=()=>{edit()};
-    document.querySelector('#post_edit').onsubmit=()=>{update();};
+    // document.querySelector('#edit_link').onclick=()=>{edit()};
+    // document.querySelector('#post_edit').onsubmit=()=>{update();};
     // document.querySelector('#profile_link').onclick=()=>{unfollow()};
    
     posts();
@@ -13,12 +13,15 @@ document.addEventListener("DOMContentLoaded",() =>{
 });
 
 function posts() {
-   id= Button.setdata.edit_post
-   console.log(id);
+//    id= Button.setdata.edit_post
+//    console.log(id);
+    document.querySelector('#all-posts').style.display="block";
     document.querySelector('#create_post_div').style.display="none";
-    document.querySelector('#user_following').style.display="none";
+    document.querySelector('#following-post').style.display="none";
     document.querySelector('#user_profile').style.display="none";
-    document.querySelector('#post_list').style.display="block";
+   
+    document.querySelector('#edit-post').style.display="none";
+    // document.querySelector('#follow-count').style.display="block";
 };
 
 function create_post() {
@@ -91,3 +94,20 @@ function update() {
             })
         
 }
+
+$(document).ready(function() {
+    $('nav ul li a:not(:only-child)').click(function(e) {
+        $(this).siblings('.nav-dropdown').toggle();
+        e.stopPropagation();
+    });
+
+    $('html').click(function(){
+        $('.nav-dropdown').hide();
+    })
+    $('#nav-toggle').click(function(){
+        $('nav ul').slideToggle();
+    })
+    $('#nav-toggle').on('click', function(){
+        this.classList.toggle('active');
+    });
+});
