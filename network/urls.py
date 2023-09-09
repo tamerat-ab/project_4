@@ -20,5 +20,7 @@ urlpatterns = [
     path("<int:id>/update", views.update, name="update"),
     path("<int:post_id>/like", views.like, name="like"),
     path("<int:post_id>/unlike", views.unlike, name="unlike"),
+    path("<int:post_id>/comment", views.comment, name="comment"),
+    path("<int:post_id>/count_follow", views.count_follow, name="count_follow"),
 ]
 # + static(settings.STATIC_URL, document_root=settings.STATIC_ROOT)
