@@ -9,7 +9,7 @@ from .models import User, Posts,Following,Like, Follower,Comment
 from .forms import Postform
 from django.core.exceptions import ObjectDoesNotExist
 import json 
-
+from django.views.decorators.csrf import csrf_exempt
 
 def index(request):
     return render(request, "network/index.html")
@@ -66,35 +66,67 @@ def register(request):
     else:
         return render(request, "network/register.html")
     
+@csrf_exempt 
 @login_required()   
 def create_post(request):
     user= request.user
     if request.method == "POST":
-        textfield = request.POST.get("text_field")
+        data = json.loads(request.body)
+        textfield= data.get("textarea")
         post_list = Posts( user=user,text_field=textfield)
         post_list.save()
         return HttpResponseRedirect(reverse("index"))
 
-# def follow():
+def delete(request,post_id):
+    post=Posts.objects.get(id=post_id)
+    post.delete()
+    return HttpResponseRedirect(reverse("post_list"))
 
-#     pass
-def post_list(request):
-    #  if request.method == "POST":
-       posts=Posts.objects.all()
+def post_list(request, page):
+    
+    posts = Posts.objects.all()  # fetching all post objects from database
+    p = Paginator(posts, 3)  # creating a paginator object
+    # getting the desired page number from url
+    page_number = page
+    try:
+        page_obj = p.get_page(page_number)  # returns the desired page object
+        return JsonResponse([posts.serialize() for posts in page_obj],safe=False)
+    except PageNotAnInteger:
+        # if page_number is not an integer then assign the first page
+        page_obj = p.page(1)
+        return JsonResponse([posts.serialize() for posts in page_obj],safe=False)
+    except EmptyPage:
+        # if page is empty then return last page
+        page_obj = p.page(p.num_pages)
+        return JsonResponse([posts.serialize() for posts in page_obj], safe=False)
+   
+
+
+
+    # posts = Posts.objects.all()  # fetching all post objects from database
+    # min=5
+    # num=len(posts)
+    # if(page-1)*min<num<=page*(min):
+    #    post_1= posts[(page*min)-min:num]
+    #    return JsonResponse([posts.serialize() for posts in post_1],safe=False)
        
-       return render(request, 'Network/index.html', {'posts_list':posts})    # {'page_obj': page_obj})
-    # return render(request, 'Network/index.html', {'posts_list':'new_posts'})    # {'page_obj': page_obj})
+    # elif page*min<=num:
+    #     post_2=posts[(page-1)*min:page*min]
+    #     return JsonResponse([posts.serialize() for posts in post_2],safe=False)
+    # else:
+    #     return JsonResponse({'none': 'none'})
 
 def profile(request,user_id):
     # followed=Follower.objects.filter(id=id)
     # followers= followed.followed_number
     # following=followed.followers_number
     user_posts=Posts.objects.filter(user=user_id)
-    user=User.objects.filter(id=user_id)
-    user_name=user[0]
+    user=User.objects.get(id=user_id)
+    user_name=user
     users_id=user_id
-
-    return render(request, 'network/index.html', {'user_posts':user_posts, 'user_name':user_name, 'users_id':user_id})
+    # return JsonResponse({'user_posts':user_posts, 'user_name':user_name, 'users_id':user_id})
+    return JsonResponse([posts.serialize() for posts in user_posts],safe=False)
+    # return render(request, 'network/index.html', {'user_posts':user_posts, 'user_name':user_name, 'users_id':user_id})
     # return HttpResponseRedirect(reverse( 'network/index.html', args={user_posts:user_posts}))
     
 def follow(request, users_id):
@@ -145,7 +177,9 @@ def following_post(request):
         post=Posts.objects.filter(user=followed_user_id)
         followed_posts.append(post)
  
-    return render(request,"network/index.html", {'followed_users':followed_posts}) #{'all_posts':all_posts})
+    # return render(request,"network/index.html", {'followed_users':followed_posts}) #{'all_posts':all_posts})
+    return JsonResponse({'followed':followed_posts})
+
 def edit(request,id):
     edit_post=Posts.objects.filter(id=id)
     return render(request,"network/index.html",{'edit_post':edit_post})
@@ -209,13 +243,21 @@ def comment(request,post_id):
         post=Posts.objects.filter(id=post_id)[0]
         comment=Comment(user=users,post=post,comment=comment)
         comment.save()
-        try:
-            # comments=Comment.objects.filter(post=post,user=users) 
-            return render(request,'network/index.html',{'comments':'comments'})
+        return HttpResponseRedirect(reverse('index'))
+        # try:
+        #     # comments=Comment.objects.filter(post=post,user=users) 
+        #     return render(request,'network/index.html',{'comments':'comments'})
             
-        except:return JsonResponse({'doesnotexist':'does not exist'})
-        return render(request,'network/index.html',{'comments':'comments'})
-        
+        # except:return JsonResponse({'doesnotexist':'does not exist'})
+        # return render(request,'network/index.html',{'comments':'comments'})
+    elif request.method == 'GET':
+            try:
+                users=User.objects.get(posts=post_id)
+                post=Posts.objects.get(id=post_id)[0]
+                comments=Comment.objects.filter(post=post,user=users) 
+                return JsonResponse({'comments':'comments'})
+            except:
+                return JsonResponse({'comments':'does not have comments'})
 
            
 

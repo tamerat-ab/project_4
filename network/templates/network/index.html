@@ -5,30 +5,58 @@
 {% block body %}
 
 
-{% if user.is_authenticated %}
+
 <div id="create_post_div">
  
 
-  <form id="post_form" action="{% url 'create_post' %}" method="post">
-      {% csrf_token %}
+  <form id="post_form" action="" method="">
+      
     
       <textarea name="text_field" id="textarea"  placeholder="write your post here"></textarea> <br>
       <button id="form_button" type="submit">post</button>
      </form>
   
   </div>
-{% endif %}  
-   
+
+  <nav aria-label="...">
+    <ul class="pagination pagination-lg">
+      <li class="page-item disabled">
+        <a class="page-link" href="#" tabindex="-1">1</a>
+      </li>
+      <li class="page-item"><a class="page-link" href="#">2</a></li>
+      <li class="page-item"><a class="page-link" href="#">3</a></li>
+    </ul>
+  </nav>
+  
+
+<div id="post_post">
+
+</div>
+
+<div id="profile">
+
+
+</div>
+
+<div id="post-follow">
+<h1>what is new</h1>
+ <button data-rebo="50" class="tam" id="1">new</button>
+</div>
+
+
+
 
 <div id="all-posts">
           {% for post in posts_list %}
               <div id="post_list">
-                      <a data-post="profile_link" href="{% url 'profile' post.user.id %} ">{{post.user.username}}</a> <br>
+                      
+                      <a data-post="profile_link" href="">{{post.user.username}}</a> <br>
                       <h3>{{post.text_field}} </h3> <br>
                       <h3>{{post.date_created_On}} </h3> <br>
                       <a id="{{post.id}}" href="{% url 'edit' post.id %}">edit</a>
                       <a id="{{post.id}}" href="{% url 'like' post.id %}"> like</a>
                       <a id="{{post.id}}" href="{% url 'unlike' post.id %}"> unlike</a><br>
+                      <a id="{{post.id}}" href="{% url 'delete' post.id %}"> Delete</a><br>
               </div>
 
               <div id="comment-box">
@@ -145,11 +173,8 @@
         {% endfor %}
         <h2 id="response_message"></h2> -->
 </div>
-    
  
 
+<!-- <script src="{% static 'network/network.js' %}"></script> -->
 {% endblock %}
-
-{% block script %}
-<script src="{% static 'network/network.js '%}"></script>
-{% endblock %}
+<script src="{% static 'network/network.js' %}"></script>
