@@ -7,174 +7,136 @@
 
 
 <div id="create_post_div">
- 
+ <h1>this create post page</h1>
 
-  <form id="post_form" action="" method="">
+     <form id="post-form" action="" method="POST">
       
-    
-      <textarea name="text_field" id="textarea"  placeholder="write your post here"></textarea> <br>
-      <button id="form_button" type="submit">post</button>
+          <textarea name="text_field" id="textarea"  placeholder="write your post here"></textarea> <br>
+          <button id="form_button" type="submit">post</button>
      </form>
   
-  </div>
-
-  <nav aria-label="...">
-    <ul class="pagination pagination-lg">
-      <li class="page-item disabled">
-        <a class="page-link" href="#" tabindex="-1">1</a>
-      </li>
-      <li class="page-item"><a class="page-link" href="#">2</a></li>
-      <li class="page-item"><a class="page-link" href="#">3</a></li>
-    </ul>
-  </nav>
-  
-
-<div id="post_post">
-
 </div>
 
-<div id="profile">
+ 
 
+<div id="post_lister">
+  <h1>this is post list page</h1>
+  {% for post in posts_list %}
+ <div id="all_posts">
 
-</div>
-
-<div id="post-follow">
-<h1>what is new</h1>
- <button data-rebo="50" class="tam" id="1">new</button>
-</div>
-
-
-
-
-<div id="all-posts">
-          {% for post in posts_list %}
               <div id="post_list">
                       
-                      <a data-post="profile_link" href="">{{post.user.username}}</a> <br>
+                      <a data-profile="{{user.id}}" id="username-link" href="">{{post.user.username}}</a> <br>
                       <h3>{{post.text_field}} </h3> <br>
                       <h3>{{post.date_created_On}} </h3> <br>
-                      <a id="{{post.id}}" href="{% url 'edit' post.id %}">edit</a>
-                      <a id="{{post.id}}" href="{% url 'like' post.id %}"> like</a>
-                      <a id="{{post.id}}" href="{% url 'unlike' post.id %}"> unlike</a><br>
-                      <a id="{{post.id}}" href="{% url 'delete' post.id %}"> Delete</a><br>
+                      <a data-ID="{{post.id}}" id="btn-edit" href="">edit</a>
+                      <div id="count-div"> <a data-ID="{{post.id}}" id="btn-like" href=""> like</a> <div id="like-image"></div></div>
+                      <a data-ID="{{post.id}}" id="btn-unlike" href=""> unlike</a><br>
+                      <a data-ID="{{post.id}}" id="btn-delete" href=""> Delete</a><br>
+                      <button data-id="{{post.id}}" id="btn-comment">Comments</button>
               </div>
 
               <div id="comment-box">
-                      <form id="comment-form" action="{% url 'comment' post.id %}" method="post">
-                        {% csrf_token %}
+                      <form id="comment-form" action="" method="post">
+                        
                       <div id=comment-1> <textarea name="comment" id="comment-area" cols="" rows="2" placeholder="comment"></textarea> </div> 
                       <div id="comment-2"><input type="submit" value="post" name="" id="comment-input"></div>
                     
                       </form>
                     
-              </div>
+            
 
               <div id="comment-post">
-                      {{comments}}
-                      {% for comment in comments %}
-                      <h1>comment{{ comment.comment}} </h1>
-                      {% endfor %}
+                    
+                    
               </div>
-              
-              
-        {% endfor%}
+            </div>
+</div>
+{% endfor %}
 </div>
 
 
-<div id="following-post">     
-        {% for query in followed_users%}     
-        {% for post in query %}
-        <div id="user_following">
-        <h2>{{post.user.username}} </h2> <br>
-        <h2>{{post.text_field}} </h2> <br>
-        <a id="{{post.id}}" href="{% url 'edit' post.id %}">edit</a>
-        <a id="{{post.id}}" href="{% url 'like' post.id %}"> like</a>
-        <a id="{{post.id}}" href="{% url 'unlike' post.id %}"> unlike</a><br>
-        </div>
-        {% endfor%} 
-        {% endfor%}
+<div id="following-post">   
+        <h1>this is following pages</h1>  
+       
+            <div id="user_following">
+            <h2>{{post.user.username}} </h2> <br>
+            <h2>{{post.text_field}} </h2> <br>
+            <a data-ID="{{post.id}}" id="btn-edit" href="">edit</a>
+            <div id="count-div"> <a data-ID="{{post.id}}" id="btn-like" href=""> like</a> <div id="like-image"></div></div>
+            <a data-ID="{{post.id}}" id="btn-unlike" href=""> unlike</a><br>
+            <a data-ID="{{post.id}}" id="btn-delete" href=""> Delete</a><br>
+            <button data-id="{{post.id}}" id="btn-comment">Comments</button>
+            </div>
+       
 </div>       
      
 <div id="user_profile">
+  <h1>this is user profile page</h1>
         <div id="follow-count">
-          count_following  {{following }}
-          count_follower {{follower}}
-          count {{count}}
+      
           </div>
-    {% for post in user_posts %}
+  
           
 
 
-            {% if users_id %}
-          <div id="user-name-div">
-            <h1 id="user_name">{{user_name}} </h1>
-          </div>
-       <div id="follow-unfollow">
-          <div id="follow-button">
-            <a id="follow_link" href="{% url 'follow' users_id %}">Follow</a>   
-            {% endif %}  
-          </div>
+                 
+                      <div id="user-name-div">
+                        <h1 id="user_name">{{user_name}} </h1>
+                      </div>
+                      
+                   <div id="follow-unfollow">
+                        <div id="follow-button">
+                          <a id="follow_link" href="">Follow</a>  
+                        </div> 
+                 
+                
 
-          <div id="unfollow-button">
-            {% if users_id %}
-            <a id="follow_link" href="{% url 'unfollow' users_id %}">Unfollow</a>   
-            {% endif %}    
-          </div> 
-    
-      </div>
+                    <div id="unfollow-button">
+                   
+                          <a id="follow_link" href="">Unfollow</a>   
+                  
+                    </div> 
+          
+              </div>
+            <div id="post_list-1">
+                  <h3>{{post.user.username}} </h3> <br>
+                  <h3>{{post.text_field}} </h3> <br>
+                  <h3>{{post.date_created_On}} </h3> <br>
+                  <h3>{{post.comment}} </h3> 
+              
 
-      <div id="post_list-1">
-        <h3>{{post.user.username}} </h3> <br>
-        <h3>{{post.text_field}} </h3> <br>
-        <h3>{{post.date_created_On}} </h3> <br>
-        <h3>{{post.comment}} </h3> 
+                  <a data-ID="{{post.id}}" id="btn-edit" href="">edit</a>
+                  <div id="count-div"> <a data-ID="{{post.id}}" id="btn-like" href=""> like</a> <div id="like-image"></div></div>
+                  <a data-ID="{{post.id}}" id="btn-unlike" href=""> unlike</a><br>
+                  <a data-ID="{{post.id}}" id="btn-delete" href=""> Delete</a><br>
+                  <button data-id="{{post.id}}" id="btn-comment">Comments</button>
+            </div>
+
+            <div id="comment-box">
+                  <form id="comment-form" action="" method="post">      
+                  <div id=comment-1> <textarea name="comment" id="comment-area" cols="" rows="2" placeholder="comment"></textarea> </div> 
+                  <div id="comment-2"><input type="submit" value="post" name="" id="comment-input"></div>
+                
+                  </form>
+            </div>
      
-
-      <a id="{{post.id}}" href="{% url 'edit' post.id %}">edit</a>
-      <a id="{{post.id}}" href="{% url 'like' post.id %}"> like</a>
-      <a id="{{post.id}}" href="{% url 'unlike' post.id %}"> unlike</a><br>
-      </div>
-
-      <div id="comment-box">
-        <form id="comment-form" action="{% url 'comment' post.id %}" method="post">
-         {% csrf_token %}
-       <div id=comment-1> <textarea name="comment" id="comment-area" cols="" rows="2" placeholder="comment"></textarea> </div> 
-       <div id="comment-2"><input type="submit" value="post" name="" id="comment-input"></div>
-     
-       </form>
-      </div>
-      {% endfor%}
     
 </div>
-
 
 
 <div id=edit-post>
-      {% for post in edit_post %}
-      <form id="post_form" action="{% url 'update' post.id %}" method="post">
-        {% csrf_token %}
+         <h1>this is edit page</h1>
+                  <form id="post_form" action="" method="">
+                  
 
-        <textarea name="text_field" id="textarea" >{{post.text_field}}</textarea> <br>
-        <button data-edit_post="form_button" type="submit">update</button>
-      </form>
-      <h1> post: {{changed_post}}  </h1>
-      {% endfor %}
-            
-
-
-          <!-- {% for post in edit_post %}
-          <form id="post_edit" action="" >
-            {% csrf_token %}
-
-            <textarea name="text_field" id="textarea" >{{post.text_field}}</textarea> <br>
-            <button data-edit_post="{{post.id}}"  type="submit">update</button>
-          </form>
-        <h1> post: {{changed_post}}  </h1>
-        {% endfor %}
-        <h2 id="response_message"></h2> -->
+                    <textarea name="text_field" id="textarea" >{{post.text_field}}</textarea> <br>
+                    <button data-edit="form_button" type="submit">update</button>
+                  </form>
+             
 </div>
+
  
 
-<!-- <script src="{% static 'network/network.js' %}"></script> -->
+
 {% endblock %}
-<script src="{% static 'network/network.js' %}"></script>

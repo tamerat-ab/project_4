@@ -69,52 +69,27 @@ def register(request):
 @csrf_exempt 
 @login_required()   
 def create_post(request):
-    user= request.user
+  
     if request.method == "POST":
+        user= request.user
         data = json.loads(request.body)
         textfield= data.get("textarea")
+        # textfield =request.POST.get("text_field")
         post_list = Posts( user=user,text_field=textfield)
         post_list.save()
-        return HttpResponseRedirect(reverse("index"))
+        # return HttpResponseRedirect(reverse("post_list"))
+        return JsonResponse({'sucess': 'success'})
 
 def delete(request,post_id):
     post=Posts.objects.get(id=post_id)
     post.delete()
     return HttpResponseRedirect(reverse("post_list"))
 
-def post_list(request, page):
-    
+def post_list(request):
+    user=request.user
     posts = Posts.objects.all()  # fetching all post objects from database
-    p = Paginator(posts, 3)  # creating a paginator object
-    # getting the desired page number from url
-    page_number = page
-    try:
-        page_obj = p.get_page(page_number)  # returns the desired page object
-        return JsonResponse([posts.serialize() for posts in page_obj],safe=False)
-    except PageNotAnInteger:
-        # if page_number is not an integer then assign the first page
-        page_obj = p.page(1)
-        return JsonResponse([posts.serialize() for posts in page_obj],safe=False)
-    except EmptyPage:
-        # if page is empty then return last page
-        page_obj = p.page(p.num_pages)
-        return JsonResponse([posts.serialize() for posts in page_obj], safe=False)
-   
+    return render(request, 'network/index.html',{'posts_list':posts})
 
-
-
-    # posts = Posts.objects.all()  # fetching all post objects from database
-    # min=5
-    # num=len(posts)
-    # if(page-1)*min<num<=page*(min):
-    #    post_1= posts[(page*min)-min:num]
-    #    return JsonResponse([posts.serialize() for posts in post_1],safe=False)
-       
-    # elif page*min<=num:
-    #     post_2=posts[(page-1)*min:page*min]
-    #     return JsonResponse([posts.serialize() for posts in post_2],safe=False)
-    # else:
-    #     return JsonResponse({'none': 'none'})
 
 def profile(request,user_id):
     # followed=Follower.objects.filter(id=id)
@@ -145,12 +120,14 @@ def follow(request, users_id):
         followed.save()
         following=Following(user=user,users_id=users_id)
         following.save()
-        return HttpResponseRedirect(reverse('profile', args=(users_id,)))
-def count_follow(request,user_id):
+        # return HttpResponseRedirect(reverse('profile', args=(users_id,)))
+    
+# def count_follow(request,user_id):
         count_following =len(Following.objects.filter(user=user_id))
         count=Following.objects.filter(user=user_id)
         count_follower=len(Follower.objects.filter(user=user_id))
-        return render(request,'network/index.html',{'following':'count_following','follower':'count_follower','count':count})
+        # return render(request,'network/index.html',{'following':'count_following','follower':'count_follower','count':count})
+        return JsonResponse ({'following':count_following,'follower':count_follower,'count':count})
 
 
 def unfollow(request, users_id):
@@ -175,34 +152,46 @@ def following_post(request):
     followed_users_ids=list(post_set)
     for followed_user_id in followed_users_ids:
         post=Posts.objects.filter(user=followed_user_id)
-        followed_posts.append(post)
- 
+        # followed_posts.append(list(post))
+        # followed=[posts for posts in post]
+        followed_posts+=post
+       
     # return render(request,"network/index.html", {'followed_users':followed_posts}) #{'all_posts':all_posts})
-    return JsonResponse({'followed':followed_posts})
+    return JsonResponse([posts.serialize() for posts in followed_posts],safe=False)
+    # return JsonResponse({'followed_posts':followed_posts})
 
-def edit(request,id):
-    edit_post=Posts.objects.filter(id=id)
-    return render(request,"network/index.html",{'edit_post':edit_post})
-
+# def edit(request,id):
+#     edit_post=Posts.objects.filter(id=id)
+#     return render(request,"network/index.html",{'edit_post':edit_post})
+@csrf_exempt
 def update(request,id):
     user=request.user
-    if request.method=='POST':
-        text_field=request.POST.get('text_field')
-        post=Posts.objects.get(user=user,id=id)
-        post.text_field=text_field
-        post.save()
-    
-    # if request.method=='PUT':
-    #     data=json.loads(request.body)
-    #     if data.get(text_field) is not None:
-    #         text_field=data.get('text_field')
-    #         post=Posts.objects.filter(user=user,id=id)
-    #         post.text_field= text_field
-    #         post.save()
-    #         return JsonResponse( {'message':'Successfully updated'},status=200)
-    # else:
+    if request.method == 'GET':
+       to_be_post=Posts.objects.filter(id=id)
+       return JsonResponse([posts.serialize() for posts in to_be_post],safe=False)
+        # return JsonResponse({'posts':post},safe=False)
+
+ 
+    if request.method=='PUT':
+        data=json.loads(request.body)
+        if data.get(text_field) is not None:
+            text_field=data.get('text_field')
+            post=Posts.objects.filter(user=user,id=id)
+            post.text_field= text_field
+            post.save()
+            return JsonResponse( {'message':'Successfully updated'},status=200)
+    else:
         return JsonResponse( {'error': 'Invalid'}, status=400)
     
+
+     # if request.method=='post':
+    #     text_field=request.POST.get('text_field')
+    #     post=Posts.objects.get(user=user,id=id)
+    #     post.text_field=text_field
+    #     post.save()
+    # elif request.method == 'Get':
+    #     post=Posts.objects.get(user=user,id=id)
+    #     return JsonResponse([posts.serialize() for posts in post])
     
 def like(request,post_id):
 
@@ -235,30 +224,38 @@ def unlike(request,post_id):
            return JsonResponse({'user':'disliked'})
     except: get_user.DoesNotExist()
 
+@csrf_exempt 
 def comment(request,post_id):
     if request.method == 'POST':
-        comment=request.POST.get('comment')
-        user=request.user
+        comment1=request.POST.get('comment')
+        user=request.user.username
         users=User.objects.filter(posts=post_id)[0]
         post=Posts.objects.filter(id=post_id)[0]
-        comment=Comment(user=users,post=post,comment=comment)
-        comment.save()
-        return HttpResponseRedirect(reverse('index'))
+        comment2=Comment(post=post,comment=comment1,current_user=user)
+        comment2.save()
+        return HttpResponseRedirect(reverse('post_list'))
+    elif request.method == 'GET':
+            try:
+                users=User.objects.get(posts=post_id)
+                post=Posts.objects.get(id=post_id)
+                comment3=Comment.objects.filter(post=post) 
+                # return JsonResponse([comment.serialize() for comment in comment])
+                return JsonResponse([comment.serialize() for comment in comment3],safe=False)
+                return JsonResponse({'comment':comment3})
+            except:
+                return JsonResponse({'comments':'no comment available'})
+            
+   # if request.method == "GET":
+    #     posts=Posts.objects.filter(id=post_id)[0]
+    #     comments=Comment.objects.filter(post=posts)
+    #     return JsonResponse([comment.serialize() for comment in comments])
+        # return HttpResponseRedirect(reverse('post_list'))
         # try:
         #     # comments=Comment.objects.filter(post=post,user=users) 
         #     return render(request,'network/index.html',{'comments':'comments'})
             
         # except:return JsonResponse({'doesnotexist':'does not exist'})
         # return render(request,'network/index.html',{'comments':'comments'})
-    elif request.method == 'GET':
-            try:
-                users=User.objects.get(posts=post_id)
-                post=Posts.objects.get(id=post_id)[0]
-                comments=Comment.objects.filter(post=post,user=users) 
-                return JsonResponse({'comments':'comments'})
-            except:
-                return JsonResponse({'comments':'does not have comments'})
-
            
 
 

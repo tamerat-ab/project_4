@@ -18,7 +18,7 @@ body {
     background-color: green;
 }
 #form_button 
-{background-color:rgb(85, 85, 114);
+{background-color:rgb(10, 10, 209);
  margin-left: 3%;
  margin-top: 0px;
  margin-bottom:20px;
@@ -328,7 +328,7 @@ body {
     padding:5px;
 
 }
-#post-div,#post-follow, #div0{
+#post-div,#post-follow, #div0 , #all_posts{
     display: flex;
     flex-direction: column;
     flex-wrap: nowrap;
@@ -358,7 +358,7 @@ body {
 
 }
 
-#btn-post1, #btn-post2, #btn-post3, #btn-post4,#id1,#id2,#id3{
+#btn-edit, #btn-delete, #btn-like, #btn-unlike,#btn-comment,#id1,#id2,#id3{
     padding: 10px;
     margin: 4px;
     width: 70px;
@@ -386,12 +386,13 @@ body {
                     <ul class="nav-list">
                         {% if user.is_authenticated %}
                         <li><a id="username" href="#">{{ user.username }}</a></li>
-                        <li><a id="create_post" href="#">Create A post</a></li>
+                        <li><a id="create_post" href="">Create A post</a></li>
                        
                      
-                        <li><a id="posts" href="">All Posts</a>
+                        <li><a id="posts" href="{% url 'post_list' %}">All Posts</a>
                          
-                        <li><a id="following" href="">Following</a>
+                        <li><a id="following_url" href="">Following</a>
+                        <!-- <li><a id="following_url" href="{% url 'following_post' %}">Following</a> -->
                         <li><a href="{% url 'logout' %}">Log out</a>
                         {% else %}
                         <li><a href="{% url 'login' %}">Log In</a>
