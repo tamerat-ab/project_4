@@ -1,17 +1,16 @@
 document.addEventListener('DOMContentLoaded', () =>{
   post_list();
+  document.getElementById('posts').onclick=post_list();
+  create_post();
   delete_post();
   profile();
-  create_post();
-  // document.querySelector('#create_post').onclick =create_post()
-  // document.querySelector('#posts').onclick=post_list();
-  // // document.querySelector('#username-link').onclick=profile();
-  // profile();
-  // edit();
-  // // document.querySelector('#posts').onclick=post_list();
- 
-  // comment();
-  // edit();
+  following();
+  like();
+  unlike();
+  follow();
+  unfollow();
+  comment();
+  edit();
 
 })
 
@@ -157,6 +156,14 @@ function edit (){
   fetch(`${id}/update`)
   .then(response=>response.json())
   .then(data=>{
+
+    document.getElementById('create_post_div').style.display="none";
+    document.getElementById('post_lister').style.display="block";
+    document.getElementById('following-post').style.style="none";
+    document.getElementById('user-profile').style.display="none";
+    document.getElementById('user-following').style.display="none";
+    document.getElementById('edit-post').style.display="block";
+
    const username=data[0]['user']
    const text_field=data[0]['text_field'];
    const date =data[0]['date'];
@@ -173,9 +180,17 @@ function edit (){
 }
 
 function following (){
-  fetch('/follow')
+  fetch('/following_post')
   .then(response=>response.json())
   .then(data=>{console.log(data);
+
+    document.getElementById('create_post_div').style.display="block";
+    document.getElementById('post_lister').style.display="none";
+    document.getElementById('following-post').style.style="none";
+    document.getElementById('user-profile').style.display="none";
+    document.getElementById('edit-post').style.display="none";
+    document.getElementById('user-following').style.display="block";
+
     const following_post=document.querySelector('#following-post')
     const div_following=document.createElement('div');
     const div_following1=document.createElement('div')
@@ -193,12 +208,11 @@ function following (){
 }
 
 function like(){
-  const like=document.getAnimations('btn-like');
+  const like=document.getElementById('btn-like');
   console.log(like);
-  const unlike=document.getAnimations('btn-unlike');
-  const delete_post=document.getAnimations('btn-delete');
-  document.document.querySelector('#btn-like').onclick=function(event){
-    id=event.target.dataset.ID;
+  console.log(like.getAttribute('data-ID'));
+  document.querySelector('#btn-like').onclick=function(event){
+    id=event.target.getAttribute('data-ID');
     console.log(id);
     fetch(`${id}/like`)
     .then(response=>response.json())

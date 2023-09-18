@@ -368,6 +368,31 @@ body {
     margin-top: 150px;
 }
 
+#btn-r{  width:50px;
+    display: flex;
+    flex-direction: row;
+    flex-wrap: nowrap;
+    justify-content: flex-start;
+    align-items: stretch;
+    align-content: stretch;
+    position: relative;
+    border-radius: 100px solid;
+    background-color:azure;
+    border: 30px;
+    width:150px;
+    height: 50px;
+}
+#btn-f{ width:110px; margin:1px;
+      border-color: #262626;
+      background-color:azure;
+    }
+#btn-c{
+    width:34px;
+    margin: 1px;
+    background-color: azure;
+    border-color: #262626 ;
+  
+}
 
 </style>
     </head>
@@ -386,10 +411,10 @@ body {
                     <ul class="nav-list">
                         {% if user.is_authenticated %}
                         <li><a id="username" href="#">{{ user.username }}</a></li>
-                        <li><a id="create_post" href="">Create A post</a></li>
+                        <!-- <li><a id="create-post" href="">Create A post</a></li> -->
                        
                      
-                        <li><a id="posts" href="{% url 'index' %}">All Posts</a>
+                        <li><a id="posts" href="">All Posts</a>
                          
                         <li><a id="following_url" href="">Following</a>
                         <!-- <li><a id="following_url" href="{% url 'following_post' %}">Following</a> -->
