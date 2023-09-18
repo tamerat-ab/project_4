@@ -12,7 +12,27 @@ import json
 from django.views.decorators.csrf import csrf_exempt
 
 def index(request):
-    return render(request, "network/index.html")
+    posts = Posts.objects.all()  # fetching all post objects from database
+    p = Paginator(posts, 4)  # creating a paginator object
+    # getting the desired page number from url
+    page_number = request.GET.get('page')
+    try:
+        page_obj = p.get_page(page_number)  # returns the desired page object
+    except PageNotAnInteger:
+        # if page_number is not an integer then assign the first page
+        page_obj = p.page(1)
+    except EmptyPage:
+        # if page is empty then return last page
+        page_obj = p.page(p.num_pages)
+    context = {'page_obj': page_obj}
+    # sending the page object to index.html
+    return render(request, 'network/index.html', context)
+
+    # user=request.user
+    # posts = Posts.objects.all()  # fetching all post objects from database
+    # return render(request, 'network/index.html',{'posts_list':posts})
+
+    # return render(request, "network/index.html")
 
 
 def login_view(request):
@@ -67,7 +87,7 @@ def register(request):
         return render(request, "network/register.html")
     
 @csrf_exempt 
-@login_required()   
+# @login_required()   
 def create_post(request):
   
     if request.method == "POST":
@@ -79,16 +99,20 @@ def create_post(request):
         post_list.save()
         # return HttpResponseRedirect(reverse("post_list"))
         return JsonResponse({'sucess': 'success'})
-
+    
+@csrf_exempt 
 def delete(request,post_id):
+    data=json.loads(request.body)
+    post_id=data.get("post_id")
     post=Posts.objects.get(id=post_id)
     post.delete()
-    return HttpResponseRedirect(reverse("post_list"))
+    # return HttpResponseRedirect(reverse("post_list"))
+    return JsonResponse({'sucess': 'success'})
 
-def post_list(request):
-    user=request.user
-    posts = Posts.objects.all()  # fetching all post objects from database
-    return render(request, 'network/index.html',{'posts_list':posts})
+# def post_list(request):
+#     user=request.user
+#     posts = Posts.objects.all()  # fetching all post objects from database
+#     return render(request, 'network/index.html',{'posts_list':posts})
 
 
 def profile(request,user_id):
@@ -225,6 +249,7 @@ def unlike(request,post_id):
     except: get_user.DoesNotExist()
 
 @csrf_exempt 
+@login_required() 
 def comment(request,post_id):
     if request.method == 'POST':
         comment1=request.POST.get('comment')

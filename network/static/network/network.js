@@ -1,14 +1,17 @@
 document.addEventListener('DOMContentLoaded', () =>{
   post_list();
-  document.querySelector('#create_post').onclick =create_post()
-  document.querySelector('#posts').onclick=post_list();
-  // document.querySelector('#username-link').onclick=profile();
+  delete_post();
   profile();
-  edit();
+  create_post();
+  // document.querySelector('#create_post').onclick =create_post()
   // document.querySelector('#posts').onclick=post_list();
+  // // document.querySelector('#username-link').onclick=profile();
+  // profile();
+  // edit();
+  // // document.querySelector('#posts').onclick=post_list();
  
-  comment();
-  edit();
+  // comment();
+  // edit();
 
 })
 
@@ -16,7 +19,11 @@ function post_list() {
 
   document.getElementById('create_post_div').style.display="block";
   document.getElementById('post_lister').style.display="block";
-  // console.log(document.querySelector('#post_lister'));
+  document.getElementById('following-post').style.style="none";
+  document.getElementById('user-profile').style.display="none";
+  document.getElementById('edit-post').style.display="none";
+  document.getElementById('user-following').style.display="none";
+  
   
   }
 
@@ -38,8 +45,24 @@ function post_list() {
             .then(data =>{const success=data['success'] ;
                          console.log(success)
                         alert('you post is ready!');
+                        // you can crete a popup message here
             });
           }}
+
+function delete_post(){
+  const delete_post=document.getElementById('btn-delete') ;
+   console.log(delete_post.getAttribute('data-ID')) ;
+  delete_post.onclick=(event)=>{
+    id=event.target.getAttribute('data-ID')
+    console.log(id)
+    fetch(`${id}/delete`,
+          {method:'PUT', body: JSON.stringify({post_id:`${id}`})})
+          .then(response=>response.json())
+          .then(data=>{})
+          // you can create a popup message here
+  }
+};
+
 
 function profile(){
   const profile=document.getElementById('username-link')
@@ -51,6 +74,14 @@ function profile(){
   .then(data =>{console.log(data)
               username=data[0]['user'];
               user_id=data[0]['user_id'];
+
+              document.getElementById('create_post_div').style.display="block";
+              document.getElementById('post_lister').style.display="none";
+              document.getElementById('following-post').style.style="none";
+              document.getElementById('edit-post').style.display="none";
+              document.getElementById('user-following').style.display="none";
+              document.getElementById('user-profile').style.display="block";
+
               const username=document.getElementById('username-div-div');
               username.innerHTML=username;
               const follow=document.getElementById('follow-button');
@@ -235,6 +266,8 @@ function unfollow(){
 
 
 }
+
+
 
   // document.querySelector('#following').onclick=user_following();
 //  document.querySelector('#profile_url').onclick=profile();
