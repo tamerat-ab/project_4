@@ -250,16 +250,20 @@ def unlike(request,post_id):
 
 @csrf_exempt 
 @login_required() 
-def comment(request,post_id):
+def create_comment(request,post_id):
     if request.method == 'POST':
-        comment1=request.POST.get('comment')
+        data=json.loads(request.body)
+        comment1=data.get('comment')
+        # comment1=request.POST.get('comment')
         user=request.user.username
-        users=User.objects.filter(posts=post_id)[0]
+        # users=User.objects.filter(posts=post_id)[0]
         post=Posts.objects.filter(id=post_id)[0]
         comment2=Comment(post=post,comment=comment1,current_user=user)
         comment2.save()
-        return HttpResponseRedirect(reverse('post_list'))
-    elif request.method == 'GET':
+        # return HttpResponseRedirect(reverse('post_list'))
+        return JsonResponse({'comment':'comment'})
+def comment(request, post_id):
+        if request.method == 'GET':
             try:
                 users=User.objects.get(posts=post_id)
                 post=Posts.objects.get(id=post_id)

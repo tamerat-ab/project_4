@@ -11,24 +11,23 @@ document.addEventListener('DOMContentLoaded', () =>{
   unfollow();
   comment();
   edit();
+  create_comment();
 
 })
 
 function post_list() {
 
-  document.getElementById('create_post_div').style.display="block";
-  document.getElementById('post_lister').style.display="block";
-  document.getElementById('following-post').style.style="none";
-  document.getElementById('user-profile').style.display="none";
-  document.getElementById('edit-post').style.display="none";
-  document.getElementById('user-following').style.display="none";
-  
-  
+  document.getElementById('create-post').style.display="black";
+  document.getElementById('post-container').style.display="block";
+  document.getElementById('following-post').style.display="none";
+  document.getElementById('profile-container').style.display="none";
+ 
   }
 
   function create_post(){
   
       const post=document.getElementById("post-form")
+      console.log(post)
       post.onsubmit=()=>{
       const textarea=document.getElementById('textarea').value
       console.log(textarea)
@@ -50,9 +49,9 @@ function post_list() {
 
 function delete_post(){
   const delete_post=document.getElementById('btn-delete') ;
-   console.log(delete_post.getAttribute('data-ID')) ;
+   console.log(delete_post.getAttribute('data-delete')) ;
   delete_post.onclick=(event)=>{
-    id=event.target.getAttribute('data-ID')
+    id=event.target.getAttribute('data-delete')
     console.log(id)
     fetch(`${id}/delete`,
           {method:'PUT', body: JSON.stringify({post_id:`${id}`})})
@@ -64,72 +63,116 @@ function delete_post(){
 
 
 function profile(){
-  const profile=document.getElementById('username-link')
+  const profile=document.querySelectorAll('#username-link')
   console.log(profile)
-  profile.onclick=function(event){
-  id = event.target.profile.setdata.profile
-  fetch(`${id}/profile`)
+  profile.forEach((profile)=>{ profile.onclick=(event)=>{
+    const id=event.target.getAttribute('data-profile')     
+  // profile.onclick=function(event){
+
+  document.getElementById('create-post').style.display="none";
+  document.getElementById('post-container').style.display="none";
+  document.getElementById('following-post').style.display="none";
+  document.getElementById('profile-container').style.display="block"; 
+
+  // id = event.target.profile.setdata.profile
+  fetch(`/${id}/profile`)
   .then(response => response.json())
   .then(data =>{console.log(data)
-              username=data[0]['user'];
-              user_id=data[0]['user_id'];
+              const user=data[0]['user']; 
+              const user_id=data[0]['user_id'];
 
-              document.getElementById('create_post_div').style.display="block";
-              document.getElementById('post_lister').style.display="none";
-              document.getElementById('following-post').style.style="none";
-              document.getElementById('edit-post').style.display="none";
-              document.getElementById('user-following').style.display="none";
-              document.getElementById('user-profile').style.display="block";
-
-              const username=document.getElementById('username-div-div');
-              username.innerHTML=username;
-              const follow=document.getElementById('follow-button');
-              const unfollow=document.getElementById('unfollow-button');
+              const username=document.getElementById('user-name-div');
+              console.log(username);
+              // username.innerHTML=username;
+              const btn_follow=document.getElementById('btn-follow');
+              const btn_unfollow=document.getElementById('btn-unfollow');
+              const user_post1=document.getElementById('user-post1');
+              const user_post2=document.getElementById('user-post2');
+              const user_post3=document.getElementById('user-post3');
+              console.log(user_post1);
+              // const follow=document.getElementById('follow-button');
+              // const unfollow=document.getElementById('unfollow-button');
                for(var i=0; i<data.length; i++){
-                  const post_list=document.getElementById('post-list-1')
-                  const post_div1=document.createElement('div');
-                  const post_div2=document.createElement('div');
-                  const post_div3=document.createElement('div')
+                  // const post_list=document.getElementById('post-list-1')
+                  // const post_div1=document.createElement('div');
+                  // const post_div2=document.createElement('div');
+                  // const post_div3=document.createElement('div')
                   text_field=data[i]['text_field']
                   date=data[i]['date_created_on']
-                  post_div1.append(document.createTextNode(text_field))
-                  post_div2.append(document.createTextNode(date))
-                  post_div3.innerHTML=comment()
+                  username.appendChild(document.createTextNode(user));
+                  user_post2.append(document.createTextNode(text_field))
+                  user_post3.append(document.createTextNode(date))
+                  // post_div3.innerHTML=comment()
                   post_list.appendChild(post_div1,post_div2,post_div3)
-                  follow.setAttribute('data-follow',user_id)
-                  unfollow.setAttribute('data-unfollow',user_id)
+                  btn_follow.setAttribute('data-follow',user_id)
+                  btn_unfollow.setAttribute('data-unfollow',user_id)
                   }
   })
-  }
-
+  // }
+}})
 }
 
+function create_comment(){
+  const comment_form=document.querySelectorAll('[data-form]')
+  console.log(comment_form)
+  comment_form.forEach((comment_form)=>{comment_form.onsubmit=(event) => {
+   id=event.target.getAttribute('data-form');
+   console.log('id')
+    // const commentarea = document.getElementById('comment-area').value;
+    // id=16
+    const commentarea = document.querySelector(`[data-textarea='${id}']`).value;
+    fetch(`${id}/create_comment`, {method:'POST', body:JSON.stringify({comment:`${commentarea}`})})
+          .then(response => response.json())
+          .then(data => { console.log(data)})   }
+  });
+  
+          console.log('data received');
+  
+}
 
 function comment() {
 
-const comment = document.getElementById('comment-box')
-document.querySelectorAll('#comment-box').forEach(comment=>{comment.style.display="none";});
-const comment_list=document.querySelector("#btn-comment");
-comment_list.querySelectorAll('#btn-comment').forEach(comment_list.onclick=(event)=>{
-document.querySelector('#comment-box').style.display="block";
-id=event.target.dataset.id;
-// this.style.display='block';
-// id=this.dataset.id;
+const comment_box = document.querySelectorAll('[data-comment]');
+console.log(comment_box);
+comment_box.forEach((comment_box)=>{ comment_box.style.display="none";});
 
-//  console.log(comment_list)
-//  console.log(comment_list.dataset.id)
-// id=comment_list.dataset.id
+const comment_list=document.querySelectorAll("#btn-comment");
+console.log(comment_list);
+//  console.log(comment_list.getAttribute('data-ID'));
+comment_list.forEach((comment_list)=>{ comment_list.onclick=(event)=>{
+  id=event.target.getAttribute('data-comments');
+  console.log(id);
+document.querySelector(`[data-comment='${id}']`).style.display="block";
+
  fetch(`${id}/comment`)
  .then(response=>response.json())
  .then(data=>{console.log(data);
   console.log(data.length);
+  
+ 
+  // const comment_box=document.querySelector('#comment-box');
+  // comment_box.forEach((comment_box) =>{
+  // comment_box.setAttribute('id','comment-box');
+  // const comment_form=document.createElement('form');
+  // comment_form.setAttribute('id','comment-form');
+  // comment_form.setAttribute('data-ID',`${id}`)
+  // const textarea=document.createElement('textarea');
+  // textarea.setAttribute('id','comment-area');
+  // textarea.setAttribute('name','comment');
+  // textarea.setAttribute('placeholder','comment');
+  // comment_form.append(textarea);
+  // comment_box.appendChild(comment_form);
+// })
+  
+  
+
   for(var i=0; i< data.length; i++){
     console.log(data.length)
           const commenter=data[i]['current_user']
           const comment=data[i]['comment']
           const date=data[i]['date']
           console.log(comment)
-          const comment_post=document.querySelector('#comment-post');
+          const comment_post=document.querySelector(`[data-cpost="${id}"]`);
           const comment_commenter=document.createElement('div');
           const comment_comment=document.createElement('div');
           const comment_date=document.createElement('div');
@@ -138,37 +181,44 @@ id=event.target.dataset.id;
           comment_comment.appendChild(document.createTextNode(comment))
           comment_date.appendChild(document.createTextNode(date))
           comment_post.append(comment_commenter,comment_comment,comment_date)
-          console.log(comment_comment)
- }
-})})
+          console.log(comment_comment)}
+
+        })  
+// const commentarea = document.getElementById('comment-area').value;
+// comment_form=document.getElementById('comment-form');
+// // if (commentarea.length > 0 && comment_form.onsubmit){
+// comment_form.onsubmit=() => {
+//   const commentarea = document.getElementById('comment-area').value;
+//   fetch(`${id}/comment`,
+//        {method:'POST',
+//         body:json.stringify({comment:`${commentarea}`})})
+//         .then(response => response.json())
+//         .then(data => { console.log(data)})}
+//         console.log('data received')
+}})
+
 }
 
 function edit (){
 
  const edit= document.querySelector("#btn-edit");
  console.log(edit)
- console.log(edit.getAttribute('data-ID'));
+ console.log(edit.getAttribute('data-edit'));
 //  console.log(edit.dataset.ID)
- document.querySelectorAll('#btn-edit').forEach(edit.onclick=()=>{
-   id=edit.getAttribute('data-ID');
+//  document.querySelectorAll('#btn-edit').forEach(edit.onclick=()=>{
+ document.querySelector('#btn-edit').onclick=()=>{
+   id=edit.getAttribute('data-edit');
   
   console.log(id)
   fetch(`${id}/update`)
   .then(response=>response.json())
   .then(data=>{
 
-    document.getElementById('create_post_div').style.display="none";
-    document.getElementById('post_lister').style.display="block";
-    document.getElementById('following-post').style.style="none";
-    document.getElementById('user-profile').style.display="none";
-    document.getElementById('user-following').style.display="none";
-    document.getElementById('edit-post').style.display="block";
-
    const username=data[0]['user']
    const text_field=data[0]['text_field'];
    const date =data[0]['date'];
    const id = data[0]['id'];
-   const form=document.querySelector('#post_form');
+   const form=document.querySelector('#post-form');
    const text=document.querySelector('#textarea');
    text.value=text_field
 
@@ -176,20 +226,22 @@ function edit (){
     fetch(`${id}/update`,
          {method: 'PUT', body:json.stringify({text_field:text_field})});}
   });
- })
+ }
 }
 
 function following (){
+  // inssert event listeners here
+  const following=document.getElementById('following_url');
+  following.onclick=()=>{
+
+    document.getElementById('create-post').style.display="none";
+    document.getElementById('post-container').style.display="none";
+    document.getElementById('following-post').style.display="block";
+    document.getElementById('profile-container').style.display="none";
+
   fetch('/following_post')
   .then(response=>response.json())
   .then(data=>{console.log(data);
-
-    document.getElementById('create_post_div').style.display="block";
-    document.getElementById('post_lister').style.display="none";
-    document.getElementById('following-post').style.style="none";
-    document.getElementById('user-profile').style.display="none";
-    document.getElementById('edit-post').style.display="none";
-    document.getElementById('user-following').style.display="block";
 
     const following_post=document.querySelector('#following-post')
     const div_following=document.createElement('div');
@@ -204,15 +256,15 @@ function following (){
       div_following2.appendChild(document.createTextNode(date_created_on));
       following_post.appendChild(div_following, div_following1,div_following2);
      }
-  });
+  });}
 }
 
 function like(){
   const like=document.getElementById('btn-like');
   console.log(like);
-  console.log(like.getAttribute('data-ID'));
+  console.log(like.getAttribute('data-like'));
   document.querySelector('#btn-like').onclick=function(event){
-    id=event.target.getAttribute('data-ID');
+    id=event.target.getAttribute('data-like');
     console.log(id);
     fetch(`${id}/like`)
     .then(response=>response.json())
@@ -220,8 +272,8 @@ function like(){
      console.log( count=data['like_count'])
       for(let i=0; i<count; i++){
         count=data['like_count']
-        const count_div=document.getElementById('count-div')
-        count_div.appendChild(count)
+        const btn_count=document.getElementById('like-count')
+        btn_count.appendChild(count)
         
       }
 
@@ -232,7 +284,7 @@ function like(){
 function unlike(){
  const unlike= document.getElementById('btn-unlike')
  unlike.onclick=(event) =>{
-  id=event.target.dataset.ID
+  id=event.target.dataset.unlike
   fetch(`${id}/unlike`)
   .then(response => response)
   .then(data =>{
@@ -245,21 +297,21 @@ function unlike(){
 }
 
 function follow(){
-  const follow= document.getElementById('follow-button')
+  const follow= document.getElementById('btn-follow')
   follow.onclick=(event) =>{
-    id=event.target.dataset.follow
+    const id=event.target.getAttribute('data-follow');
     fetch(`${id}/follow`)
     .then(response => response.json())
     .then(data =>{
       console.log(data);
       following=data['following'];
       follower=data['follower'];
-      const follower_count=document.createElement('div');
-      const following_count=document.createElement('div');
-      follower_count.appendChild(document.createTextNode('followers'));
-      follower_count.appendChild(document.createTextNode(follower))
-      following_count.appendChild(document.createTextNode('following'));
-      following_count.appendChild(document.createTextNode(following))
+      const follower_count=document.getElementById('btn-count');
+      const following_count=document.getElementById('btn-following');
+      follower_count.appendChild(document.createTextNode('follower'));
+      following_count.appendChild(document.createTextNode('following'))
+      // following_count.appendChild(document.createTextNode('following'));
+      // following_count.appendChild(document.createTextNode(following))
 
 
     })

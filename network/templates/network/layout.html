@@ -13,148 +13,6 @@
         {% endblock%}
 
         <style>
- #nav-bar{background-color: blue; color: brown;}           
-body {
-    background-color: green;
-}
-#form_button 
-{background-color:rgb(10, 10, 209);
- margin-left: 3%;
- margin-top: 0px;
- margin-bottom:20px;
- width:15%;}
-
-.profile
-{background-color:rgb(97, 97, 155);}
-
-#textarea
-    {
-        display: flex;
-        flex-direction: row;
-        flex-wrap: nowrap;
-        justify-content: flex-start;
-        align-items: stretch;
-        align-content: stretch;
-        width:95%;
-        margin:auto;
-        margin-bottom: 5px;
-        border: 1px solid;
-        border-radius: 10px;
-    }
-#post_list,#post_list-1, #user-following{
-    background-color:rgb(142, 223, 248);
-    border: 2px solid;
-    padding: 25px;
-    width:95%;
-    margin: auto;
-    border-radius: 10px;
-    opacity:0.8;
-}
-#comment-form{
-    display: flex;
-    flex-direction: row;
-    flex-wrap: nowrap;
-    justify-content: flex-start;
-    align-items: stretch;
-    align-content: stretch;
-    width:95%;
-    margin:auto;
-    margin-bottom: 5px;
-    border: 0px solid;
-    border-radius: 10px;
-    
-    border: 5px solid;
-
-    }
-#comment-1{
-    position: relative; 
-    width: 98%;
-
-    
-}
-#comment-2{
-    position: relative; 
-    width: 7%;
-    border-radius: 10px solid;
-    
-}
-#comment-input{
-    position:relative; 
-    width: 100%;
-    border-radius: 10px solid;
-    background-color: bisque;
-    padding-left: 70%;
-    padding-top: 20%;
-    padding-right: 100%;
-    padding-bottom: 20%;
-    margin-left: -70%;
-    /* margin-right:0%; */
-
-}
-#comment-area{
-   
-    width:95%;
-    border: 1px solid;
-    height: 100%;
-}
-
-/* #user_profile{
-    display: flex;
-    flex-direction: column;
-    flex-wrap: nowrap;
-    justify-content: flex-start;
-    align-items: stretch;
-    align-content: stretch;
-    width:95%;
-    margin:auto;
-    background-color: aquamarine;
-   
-} */
-#follow-unfollow ,#comment-post{
-    display: flex;
-    flex-direction: row;
-    flex-wrap: nowrap;
-    justify-content: flex-start;
-    align-items: stretch;
-    align-content: stretch;
-    width:95%;
-    margin:auto;
-    background-color: aquamarine;
-   
-}
-
-#follow-button{
-    position: relative;
-    width: 35%;
-    color: rgb(77, 42, 165);
-}
-
-#unfollow-button{
-    position: relative;
-    width:3%;
-    color: brown;
-    margin-left: -100px;
-    margin-bottom: 10px;
-}
-
-#user-name-div {
-    position: relative;
-    width: 95%;
-    color: rgb(75, 42, 165);
-    margin:auto;
-    margin-left:12px;
-
-}
-#comment-post{
-    position: relative;
-    height: 60px;
-   
-    border-radius: 30px solid;
-   
-    background-color:white;
-    
-}
-
 
 * {
         margin: 0;
@@ -324,46 +182,298 @@ body {
             display: block !important;
         }
     }
+
+    /* #nav-bar{background-color: blue; color: brown;}            */
+body {
+    background-color:aliceblue;
+}
+#section{
+    background-color:aliceblue;
+    margin-top: 10px;
+    width: auto;
+    height: auto;
+}
+
+#create-post,#edit-post{
+    display: flex;
+        flex-direction: row;
+        flex-wrap: nowrap;
+        justify-content: flex-start;
+        align-items: stretch;
+        align-content: stretch;
+        width:95%;
+        padding-top: -20px;
+        position: relative;
+        margin-bottom:5px; 
+        margin:auto;
+        border: solid;     
+        background-color:aliceblue;}
+        
+#post-header{
+        margin-left:30px
+    }  
+
+#textarea
+    {
+        display: flex;
+        flex-direction: row;
+        flex-wrap: nowrap;
+        justify-content: flex-start;
+        align-items: stretch;
+        align-content: stretch;
+        width:95%;
+        margin:auto;
+        margin-bottom: -25px; 
+        border: 1px solid;
+        /* border-radius: 10px; */
+    }
+
+#form-button 
+    {background-color:rgb(43, 10, 209);
+        text-align: center;
+    padding-bottom: -20px;
+    margin-left: 35px;
+    margin-top: -40px; 
+    margin-bottom:20px;
+    width:70px;} 
+
+#post-container
+{
+    background-color:aliceblue;
+    border: 2px solid;
+    padding: 25px;
+    width:95%;
+    margin: auto;
+    /* border-radius: 10px; */
+    margin-top: 20px;
+    /* opacity:0.8; */
+}
+#all-posts,#following-post{
+    display: flex;
+    flex-direction: column;
+    flex-wrap: nowrap;
+    justify-content: flex-start;
+    align-items: stretch;
+    align-content: stretch;
+    position: relative;
+    padding: 40px;
+    /* background-color: rgb(141, 170, 195); */
+    width: 95%;
+    margin: 30px;
+    border: solid;
+    
+}
+#comment-box{
+    display: flex;
+    flex-direction: column;
+    flex-wrap: nowrap;
+    justify-content: flex-start;
+    align-items: stretch;
+    align-content: stretch;
+    width:95%;
+    margin:auto;
+    margin-bottom: 5px;  
+    /* border: solid; */
+
+    }
+#comment-form{
+    display: flex;
+    flex-direction: row;
+    flex-wrap: nowrap;
+    justify-content: flex-start;
+    align-items: stretch;
+    align-content: stretch;
+    width:100%;
+    margin:auto;
+    margin-bottom: 20px;
+    border: solid;
+
+    }
+/* #comment-1{
+    position: relative; 
+    width: 100%;   
+} */
+#comment-area{
+    position: relative; 
+    width: 97%;
+    /* border:solid;     */
+    text-align:justify;
+    border-style:none
+}
+#comment-input{
+    position: relative; 
+    width: 3%;
+    /* border:solid;  */
+    padding-right: 52px;   
+  
+}
+
+#comment-post{
+    display: flex;
+    flex-direction: column;
+    flex-wrap: nowrap;
+    justify-content: flex-start;
+    align-items: stretch;
+    align-content: stretch;
+    width:100%;
+    margin-bottom: 50px;
+    height: auto;
+    border-style:outset;  
+    /* background-color: aliceblue; */
+    border-radius: 10px;
+}
+img{
+    width: 100px;
+    height: 100px;
+}
+
+#btn-edit, #btn-delete, #btn-like, #btn-unlike,#btn-comment,#id1,#id2,#id3{
+  
+    height: 20px;
+    padding-left: 5px;
+    padding-right: 5px;
+    padding-bottom: 40px;
+    text-align: center;
+    margin: auto;
+    border-radius: 15px;
+    margin-bottom: 10px;
+}
+
+#follow-unfollow{
+    display: flex;
+    flex-direction: row;
+    flex-wrap: nowrap;
+    justify-content: flex-start;
+    align-items: stretch;
+    align-content: stretch;
+    width:95%;
+    margin:auto;
+    background-color:#2ab1ce;
+   
+}
+
+#follow-button{
+    display: flex;
+    flex-direction: row;
+    flex-wrap: nowrap;
+    justify-content: flex-start;
+    align-items: stretch;
+    align-content: stretch;
+    position: relative;
+    width: 200px;;
+    /* background-color: red; */
+    margin-left: 0px;
+    margin-right: 20px;
+    #btn-count{
+        width: 50px;
+       
+        border-top-right-radius: 30px;
+        border-bottom-right-radius: 30px;
+        background-color:aliceblue
+    };
+
+}
+
+#following-button{
+    display: flex;
+    flex-direction: row;
+    flex-wrap: nowrap;
+    justify-content: flex-start;
+    align-items: stretch;
+    align-content: stretch;
+    position: relative;
+    margin-left: 800px;
+    /* background-color: red; */
+    width:150px;
+    #div-following{
+     background-color: aliceblue;
+     border-radius:20px;
+     width:100px
+    };
+    #btn-following{
+        background-color: aliceblue;
+    }
+}
+
+#unfollow-button{
+    display: flex;
+    flex-direction: row;
+    flex-wrap: nowrap;
+    justify-content: flex-start;
+    align-items: stretch;
+    align-content: stretch;
+    position: relative;
+    background-color: red;
+    margin-left: 10px;
+    #btn-unfollow{
+        background-color:aliceblue;
+    }
+   
+}
+#profile-container{
+    background-color:aliceblue;
+    border: 2px solid;
+    padding: 25px;
+    width:95%;
+    margin: auto;
+    /* border-radius: 10px; */
+    margin-top: 20px;
+    /* opacity:0.8; */
+}
+#profile-title,#following-title,#post-title{
+    background-color: green;
+    color:#fff;}
+
+#all-profile{
+    display: flex;
+    flex-direction: column;
+    flex-wrap: nowrap;
+    justify-content: flex-start;
+    align-items: stretch;
+    align-content: stretch;
+    position: relative;
+    padding: 40px;
+    /* background-color: rgb(141, 170, 195); */
+    width: 95%;
+    margin: 30px;
+    border: solid;
+}
+#profile-div{
+    display: flex;
+    flex-direction: column;
+    flex-wrap: nowrap;
+    justify-content: flex-start;
+    align-items: stretch;
+    align-content: stretch;
+    width:100%;
+    margin-bottom: 50px;
+    height: 100px;
+    
+}
+#user-name-div {
+    position: relative;
+   padding-bottom: 20px;
+   background-color: #2ab1ce;
+   font-size: 30px;
+   color: antiquewhite;
+   margin-bottom: 10px;
+
+}
+#username-link{
+    width:100%;
+    background-color: #2ab1ce;
+    text-align: left;
+    font-size: 30px;
+    height: auto;
+}
+
 #btn-post{
     padding:5px;
 
 }
-#post-div,#post-follow, #div0 , #all_posts{
-    display: flex;
-    flex-direction: column;
-    flex-wrap: nowrap;
-    justify-content: flex-start;
-    align-items: stretch;
-    align-content: stretch;
-    position: relative;
-    padding: 100px;
-    border-radius: 4px solid;
-    background-color: aquamarine;
-    width: 95%;
-    margin: 30px;
-    border-radius: 20px ;
-}
-#post-post{
-    display: flex;
-    flex-direction: column;
-    flex-wrap: nowrap;
-    justify-content: flex-start;
-    align-items: stretch;
-    align-content: stretch;
-    position: relative;
-    border-radius: 50px solid;
-    border: 5px solid rgb(17, 21, 20);
-    width: 95%;
-    margin: 10px;
 
-}
 
-#btn-edit, #btn-delete, #btn-like, #btn-unlike,#btn-comment,#id1,#id2,#id3{
-    padding: 10px;
-    margin: 4px;
-    width: 70px;
-    height: 40px;
-}
+
 #div3-post{
     margin-top: 150px;
 }
@@ -382,11 +492,11 @@ body {
     width:150px;
     height: 50px;
 }
-#btn-f{ width:110px; margin:1px;
+#btn-follow{ width:110px; margin:1px;
       border-color: #262626;
       background-color:azure;
     }
-#btn-c{
+#btn-count{
     width:34px;
     margin: 1px;
     background-color: azure;

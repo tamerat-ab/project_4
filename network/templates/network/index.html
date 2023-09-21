@@ -5,77 +5,84 @@
 {% block body %}
 
 
+<section id="section">
 
-<div id="create_post_div">
- <h1>this create post page</h1>
+<div id="create-post">
+ <h1 id="post-header">New Post</h1>
 
      <form id="post-form">
       
           <textarea name="text_field" id="textarea"  placeholder="write your post here"></textarea> <br>
-          <button id="form_button" type="submit">post</button>
+          <button id="form-button" type="submit">post</button>
      </form>
   
 </div>
 
  
 
-<div id="post_lister">
-  <h1>this is post list page</h1>
+<div id="post-container">
+  <div id="post-title">All posts</div>
   {% for post in page_obj %}
- <div id="all_posts">
+      <div id="all-posts">
 
-              <div id="post_list">
+              <div id="post-list">
                       
-                      <a data-profile="{{user.id}}" id="username-link" href="">{{post.user.username}}</a> <br>
+                      <button data-profile="{{post.user.id}}" id="username-link" >{{post.user.username}}</button> <br>
+                      <a data-edit="{{post.id}}" id="btn-edit" href="">edit</a>
                       <h3>{{post.text_field}} </h3> <br>
                       <h3>{{post.date_created_On}} </h3> <br>
-                      <a data-ID="{{post.id}}" id="btn-edit" href="">edit</a>
-                      <div id="count-div"> <a data-ID="{{post.id}}" id="btn-like" href=""> like</a> <div id="like-image"></div></div>
-                      <a data-ID="{{post.id}}" id="btn-unlike" href=""> unlike</a><br>
-                      <a data-ID="{{post.id}}" id="btn-delete" href=""> Delete</a><br>
-                      <button data-id="{{post.id}}" id="btn-comment">Comments</button>
+                      <!-- <a data-ID="{{post.id}}" id="btn-edit" href="">edit</a> -->
+                      <div id="count-div"> <a data-like="{{post.id}}" id="btn-like" href=""> like</a> <div id="like-image"></div></div>
+                      <!-- <img src="{% static 'network/heart.png' %}" alt="">
+                      <img src="{% static 'network/friends.jpg' %}" alt=""> -->
+                      <a data-unlike="{{post.id}}" id="btn-unlike" href=""> unlike</a><br>
+                      <a data-delete="{{post.id}}" id="btn-delete" href=""> Delete</a><br>
+                      <button data-comments="{{post.id}}" id="btn-comment">Comments</button>
               </div>
 
-              <div id="comment-box">
-                      <form id="comment-form">
+              <div id="comment-box"  data-comment="{{post.id}}"> 
+                      <form data-form="{{post.id}}" id="comment-form">
                         
-                      <div id=comment-1> <textarea name="comment" id="comment-area" cols="" rows="2" placeholder="comment"></textarea> </div> 
-                      <div id="comment-2"><input type="submit" value="post" name="" id="comment-input"></div>
+        
+                       <textarea data-textarea="{{post.id}}" name="comment" id="comment-area" cols="" rows="2" placeholder="comment"></textarea> 
+                      
+                       <input data-put="{{post.id}}"  type="submit" value="post" name="" id="comment-input">
                     
                       </form>
                     
             
 
-              <div id="comment-post">
-                    
-                    
-              </div>
-            </div>
-</div>
+                      <div data-cpost="{{post.id}}" id="comment-post">
+                            
+                            
+                      </div>
+              </div> 
+      </div>
 {% endfor %}
-<center>
-<div>
-  <span>
-    {% if page_obj.has_previous %}
-      <a href="?page={{ page_obj.previous_page_number }}">Previous</a>
-    {% endif %}
-    <span>
-      Page {{ page_obj.number }} of {{ page_obj.paginator.num_pages }}.
-    </span>
-    {% if page_obj.has_next %}
-      <a href="?page={{ page_obj.next_page_number }}">Next</a>
-    {% endif %}
-  </span>
-</div>
-</center>
+          <center>
+          <div>
+              <span>
+                {% if page_obj.has_previous %}
+                  <a href="?page={{ page_obj.previous_page_number }}">Previous</a>
+                {% endif %}
+                <span>
+                  Page {{ page_obj.number }} of {{ page_obj.paginator.num_pages }}.
+                </span>
+                {% if page_obj.has_next %}
+                  <a href="?page={{ page_obj.next_page_number }}">Next</a>
+                {% endif %}
+              </span>
+          </div>
+          </center>
 
 </div>
 
 
 <div id="following-post">   
-      
+           <div id="following-title">Following Posts</div> 
             <div id="user-following">
-            <h1>this is following pages r</h1>  
+           
+            
             <a data-ID="{{post.id}}" id="btn-edit" href="">edit</a>
             <div id="count-div"> <a data-ID="{{post.id}}" id="btn-like" href=""> like</a> <div id="like-image"></div></div>
             <a data-ID="{{post.id}}" id="btn-unlike" href=""> unlike</a><br>
@@ -85,72 +92,82 @@
        
 </div>       
      
-<div id="user-profile">
-  <h1>this is user profile page</h1>
-        <div id="follow-count">
-      
-          </div>
-  
-          
 
 
-                 
+<div id="profile-container">
+<div id="profile-title">User Profile</div>
+        <div id="all-profile">
+                <div id="profile-div">
                       <div id="user-name-div">
-                        <h1 id="user_name">{{user_name}} </h1>
+                       
                       </div>
                       
                    <div id="follow-unfollow">
                         <div id="follow-button">
-                          <div id="btn-r"> <button id="btn-f">Follow</button> <div id="btn-c">count</div>   </div>
+                           <button id="btn-follow">Follow</button> <div id="btn-count">count</div>   
+                        </div> 
+
+                        <div id="unfollow-button">                  
+                          <button id="btn-unfollow">Unfollow</button>                
+                        </div> 
+                  
+                        <div id="following-button">
+                          <div id="div-following"> following </div>  <div id="btn-following">count</div>   
                         </div> 
                  
-                
-
-                    <div id="unfollow-button">
-                   
-                      <div id="btn-r"> <button id="btn-f">Follow</button> <div id="btn-c">count</div>   </div> 
-                  
-                    </div> 
-          
-              </div>
-            <div id="post_list-1">
-                  <h3>{{post.user.username}} </h3> <br>
-                  <h3>{{post.text_field}} </h3> <br>
-                  <h3>{{post.date_created_On}} </h3> <br>
-                  <h3>{{post.comment}} </h3> 
+                           
+                   </div>
+                </div>
+            <div id="post-list-1">
+                  <!-- <h3 id="user-post1"> username </h3> <br> -->
+                  <h3 id="user-post2"></h3> <br>
+                  <h3 id="user-post3"> </h3> <br>
+                 
               
 
                   <a data-ID="{{post.id}}" id="btn-edit" href="">edit</a>
-                  <div id="count-div"> <a data-ID="{{post.id}}" id="btn-like" href=""> like</a> <div id="like-image"></div></div>
+                  <div id="count-div"> <a data-ID="{{post.id}}" id="btn-like" href=""> like</a> <div id="like-count"></div></div>
                   <a data-ID="{{post.id}}" id="btn-unlike" href=""> unlike</a><br>
                   <a data-ID="{{post.id}}" id="btn-delete" href=""> Delete</a><br>
                   <button data-id="{{post.id}}" id="btn-comment">Comments</button>
             </div>
 
-            <div id="comment-box">
-                  <form id="comment-form">      
-                  <div id=comment-1> <textarea name="comment" id="comment-area" cols="" rows="2" placeholder="comment"></textarea> </div> 
-                  <div id="comment-2"><input type="submit" value="post" name="" id="comment-input"></div>
+      <div id="comment-box">
+              <form id="comment-form">
                 
-                  </form>
-            </div>
-     
+              <!-- <div id=comment-1> <textarea name="comment" id="comment-area" cols="" rows="2" placeholder="comment"></textarea> </div>  -->
+               <textarea name="comment" id="comment-area" cols="" rows="2" placeholder="comment"></textarea> 
+              <!-- <div id="comment-2"><input type="submit" value="post" name="" id="comment-input"></div> -->
+              <input type="submit" value="post" name="" id="comment-input">
+            
+              </form>
+            
     
+
+              <div id="comment-post">
+                    
+                    
+              </div>
+      </div>
+     
+ </div>   
 </div>
 
 
-<div id=edit-post>
-         <h1>this is edit page</h1>
-                  <form id="post_form" action="" method="">
+<!-- <div id=edit-post> -->
+         <!-- <h1>this is edit page</h1> -->
+                  <!-- <form id="post-form" action="" method="">
                   
 
-                    <textarea name="text_field" id="textarea" >{{post.text_field}}</textarea> <br>
-                    <button data-edit="form_button" type="submit">update</button>
-                  </form>
+                    <textarea name="text_field" id="textarea" > </textarea> <br>
+                    <button id="form-button" type="submit">update</button>
+                  </form> -->
              
-</div>
+<!-- </div> -->
 
  
-
-
+</section>
 {% endblock %}
+
+
+   <!-- <div id="comment-2"><input type="submit" value="post" name="" id="comment-input"></div> -->
