@@ -12,6 +12,7 @@ document.addEventListener('DOMContentLoaded', () =>{
   comment();
   edit();
   create_comment();
+  // count_follow();
 
 })
 
@@ -61,11 +62,11 @@ function delete_post(){
   }
 };
 
-
-function profile(){
+// asyncronous is used to fetch
+ function profile(){
   const profile=document.querySelectorAll('#username-link')
   console.log(profile)
-  profile.forEach((profile)=>{ profile.onclick=(event)=>{
+  profile.forEach((profile)=>{ profile.onclick=async(event)=>{
     const id=event.target.getAttribute('data-profile')     
   // profile.onclick=function(event){
 
@@ -75,38 +76,98 @@ function profile(){
   document.getElementById('profile-container').style.display="block"; 
 
   // id = event.target.profile.setdata.profile
-  fetch(`/${id}/profile`)
+  await fetch(`/${id}/profile`)
   .then(response => response.json())
   .then(data =>{console.log(data)
               const user=data[0]['user']; 
               const user_id=data[0]['user_id'];
+              const id=data[0]['id'];
 
               const username=document.getElementById('user-name-div');
               console.log(username);
-              // username.innerHTML=username;
+              username.appendChild(document.createTextNode(user));
               const btn_follow=document.getElementById('btn-follow');
               const btn_unfollow=document.getElementById('btn-unfollow');
-              const user_post1=document.getElementById('user-post1');
-              const user_post2=document.getElementById('user-post2');
-              const user_post3=document.getElementById('user-post3');
-              console.log(user_post1);
-              // const follow=document.getElementById('follow-button');
-              // const unfollow=document.getElementById('unfollow-button');
+              btn_follow.setAttribute('data-follow',user_id)
+              btn_unfollow.setAttribute('data-unfollow',user_id)
+
+          
+              // console.log(user_post1);
+             
                for(var i=0; i<data.length; i++){
-                  // const post_list=document.getElementById('post-list-1')
-                  // const post_div1=document.createElement('div');
-                  // const post_div2=document.createElement('div');
-                  // const post_div3=document.createElement('div')
-                  text_field=data[i]['text_field']
-                  date=data[i]['date_created_on']
-                  username.appendChild(document.createTextNode(user));
-                  user_post2.append(document.createTextNode(text_field))
-                  user_post3.append(document.createTextNode(date))
-                  // post_div3.innerHTML=comment()
-                  post_list.appendChild(post_div1,post_div2,post_div3)
-                  btn_follow.setAttribute('data-follow',user_id)
-                  btn_unfollow.setAttribute('data-unfollow',user_id)
-                  }
+                 
+                  const text_field=data[i]['text_field']
+                  const date=data[i]['date_created_on']
+                  const id=data[i]['id']
+
+
+                  const user_post1=document.createElement('div');
+                  user_post1.setAttribute('id', 'user-post1');
+                  const user_post2=document.createElement('div');
+                  user_post2.setAttribute('id', 'user-post2');
+                  const user_post3=document.createElement('div');
+                  user_post3.setAttribute('id', 'user-post3');
+                  const profile_box=document.createElement('div');
+                  profile_box.setAttribute('id', 'profile-box');
+                  const edit=document.createElement('div');
+                  edit.setAttribute('id', 'btn-edit');
+                  edit.setAttribute('data-edit',`${id}`);
+                  const like=document.createElement('div');
+                  like.setAttribute('id', 'btn-like');
+                  like.setAttribute('data-like',`${id}`);
+                  const unlike=document.createElement('div');
+                  unlike.setAttribute('id', 'btn-unlike');
+                  unlike.setAttribute('data-unlike',`${id}`);
+                  const delete_post=document.createElement('div');
+                  delete_post.setAttribute('id', 'btn-delete');
+                  delete_post.setAttribute('data-delete',`${id}`);
+                  const comment=document.createElement('div');
+                  comment.setAttribute('id', 'btn-comment');
+                  comment.setAttribute('data-comments',`${id}`);
+                  const comment_box=document.createElement('div');
+                  comment_box.setAttribute('id', 'comment-box');
+                  comment_box.setAttribute('data-comment',`${id}`);
+                  const textarea=document.createElement('div');
+                  textarea.setAttribute('id', 'comment-area');
+                  textarea.setAttribute('data-textarea',`${id}`);
+                  textarea.setAttribute('placeholder','comment');
+                  const input=document.createElement('div');
+                  input.setAttribute('id', 'comment-input');
+                  input.setAttribute('data-put',`${id}`);
+                  input.setAttribute('type','submit');
+                  input.setAttribute('value','post');
+                  const comment_post=document.createElement('div');
+                  comment_post.setAttribute('id', 'comment-post');
+                  comment_post.setAttribute('data-cpost', `${id}`);
+    
+                 user_post2.appendChild(document.createTextNode(text_field));
+                 user_post3.appendChild(document.createTextNode(date));
+                 profile_box.append(user_post2, user_post3,edit,like,unlike,delete_post,comment,comment_box);
+
+                const all_profile=document.getElementById('all-profile');
+                all_profile.appendChild(profile_box);
+                  // username.appendChild(document.createTextNode(user));
+                  // user_post2.append(document.createTextNode(text_field))
+                  // user_post3.append(document.createTextNode(date))
+                  // // post_div3.innerHTML=comment()
+                  // profile_box.innerHTML
+                  // post_list.appendChild(post_div1,post_div2,post_div3)
+                  // btn_follow.setAttribute('data-follow',user_id)
+                  // btn_unfollow.setAttribute('data-unfollow',user_id)
+}
+
+ fetch(`${id}/count_follow`)
+.then(response => response.json())
+.then(data =>{
+  console.log(data);
+  const following=data['following'];
+  const follower=data['follower'];
+  const follower_count=document.getElementById('btn-count');
+  const following_count=document.getElementById('btn-following');
+  follower_count.appendChild(document.createTextNode(follower));
+  following_count.appendChild(document.createTextNode(following)) })
+
+
   })
   // }
 }})
@@ -299,17 +360,18 @@ function unlike(){
 function follow(){
   const follow= document.getElementById('btn-follow')
   follow.onclick=(event) =>{
-    const id=event.target.getAttribute('data-follow');
-    fetch(`${id}/follow`)
+     const id=event.target.getAttribute('data-follow');
+     fetch(`${id}/follow`,{method: 'POST',body:JSON.stringify({id:`${id}`})})
+
     .then(response => response.json())
     .then(data =>{
       console.log(data);
-      following=data['following'];
-      follower=data['follower'];
-      const follower_count=document.getElementById('btn-count');
-      const following_count=document.getElementById('btn-following');
-      follower_count.appendChild(document.createTextNode('follower'));
-      following_count.appendChild(document.createTextNode('following'))
+      // const following=data['following'];
+      // const follower=data['follower'];
+      // const follower_count=document.getElementById('btn-count');
+      // const following_count=document.getElementById('btn-following');
+      // follower_count.appendChild(document.createTextNode(follower));
+      // following_count.appendChild(document.createTextNode(following))
       // following_count.appendChild(document.createTextNode('following'));
       // following_count.appendChild(document.createTextNode(following))
 
@@ -318,6 +380,25 @@ function follow(){
   }
 
 }
+
+// function count_follow(){
+// const profile=document.querySelectorAll('#username-link')
+//   console.log(profile)
+//   profile.forEach((profile)=>{ profile.onclick= async(event)=>{
+//     const id=event.target.getAttribute('data-profile')  
+//     console.log(id);
+//    await fetch(`${id}/count_follow`)
+//    .then(response => response.json())
+//    .then(data =>{
+//      console.log(data);
+//      const following=data['following'];
+//      const follower=data['follower'];
+//      const follower_count=document.getElementById('btn-count');
+//      const following_count=document.getElementById('btn-following');
+//      follower_count.appendChild(document.createTextNode(follower));
+//      following_count.appendChild(document.createTextNode(following)) })
+//   }})
+//    };
 
 function unfollow(){
  const unfollow= document.getElementById('unfollow-button')
@@ -332,6 +413,17 @@ function unfollow(){
 
 
 }
+
+
+
+ // const username=document.getElementById('user-name-div');
+              // console.log(username);
+              // const btn_follow=document.getElementById('btn-follow');
+              // const btn_unfollow=document.getElementById('btn-unfollow');
+              // const user_post1=document.getElementById('user-post1');
+              // const user_post2=document.getElementById('user-post2');
+              // const user_post3=document.getElementById('user-post3');
+              // const profile_box=document.getElementById('profile-box');
 
 
 

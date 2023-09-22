@@ -102,9 +102,9 @@
                        
                       </div>
                       
-                   <div id="follow-unfollow">
+                    <div id="follow-unfollow">
                         <div id="follow-button">
-                           <button id="btn-follow">Follow</button> <div id="btn-count">count</div>   
+                           <button id="btn-follow">Follow</button> <div id="btn-count"></div>   
                         </div> 
 
                         <div id="unfollow-button">                  
@@ -112,15 +112,16 @@
                         </div> 
                   
                         <div id="following-button">
-                          <div id="div-following"> following </div>  <div id="btn-following">count</div>   
+                          <div id="div-following"> following </div>  <div id="btn-following"></div>   
                         </div> 
                  
                            
-                   </div>
+                     </div>
                 </div>
-            <div id="post-list-1">
+          <!-- <div id="profile-box">
+            <div id="post-box"> -->
                   <!-- <h3 id="user-post1"> username </h3> <br> -->
-                  <h3 id="user-post2"></h3> <br>
+                  <!-- <h3 id="user-post2"></h3> <br>
                   <h3 id="user-post3"> </h3> <br>
                  
               
@@ -132,24 +133,25 @@
                   <button data-id="{{post.id}}" id="btn-comment">Comments</button>
             </div>
 
-      <div id="comment-box">
-              <form id="comment-form">
-                
-              <!-- <div id=comment-1> <textarea name="comment" id="comment-area" cols="" rows="2" placeholder="comment"></textarea> </div>  -->
-               <textarea name="comment" id="comment-area" cols="" rows="2" placeholder="comment"></textarea> 
-              <!-- <div id="comment-2"><input type="submit" value="post" name="" id="comment-input"></div> -->
-              <input type="submit" value="post" name="" id="comment-input">
-            
-              </form>
-            
-    
+            <div id="comment-box"  data-comment="{{post.id}}"> 
+                  <form data-form="{{post.id}}" id="comment-form">
+                    
 
-              <div id="comment-post">
-                    
-                    
-              </div>
-      </div>
-     
+                  <textarea data-textarea="{{post.id}}" name="comment" id="comment-area" cols="" rows="2" placeholder="comment"></textarea> 
+                  
+                  <input data-put="{{post.id}}"  type="submit" value="post" name="" id="comment-input">
+                
+                  </form>
+                
+        
+
+                  <div data-cpost="{{post.id}}" id="comment-post">
+                        
+                        
+                  </div>
+            </div>  -->
+     <!-- </div> -->
+      
  </div>   
 </div>
 

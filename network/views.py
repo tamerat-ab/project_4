@@ -127,31 +127,35 @@ def profile(request,user_id):
     return JsonResponse([posts.serialize() for posts in user_posts],safe=False)
     # return render(request, 'network/index.html', {'user_posts':user_posts, 'user_name':user_name, 'users_id':user_id})
     # return HttpResponseRedirect(reverse( 'network/index.html', args={user_posts:user_posts}))
-    
+@csrf_exempt    
 def follow(request, users_id):
     user=request.user
     user_id=user.id
-    try:
-        followed_user=Following.objects.filter(user=user_id, users_id=users_id)
-        if followed_user.exists():
-            return HttpResponseRedirect(reverse('profile', args=(users_id,)))
-            # return JsonResponse({'followed_id':'id_exits'})
-    except: followed_user.DoesNotExist
+    if request.method == 'POST':
+        data=json.loads(request.body)
+        users_id=data.get('id')
+        try:
+            followed_user=Following.objects.filter(user=user_id, users_id=users_id)
+            if followed_user.exists():
+                return HttpResponseRedirect(reverse('profile', args=(users_id,)))
+                # return JsonResponse({'followed_id':'id_exits'})
+        except: followed_user.DoesNotExist
 
-    else: 
-        user_followed=User.objects.filter(id=users_id)[0]
-        followed=Follower(user=user_followed, follower_id=user_id)
-        followed.save()
-        following=Following(user=user,users_id=users_id)
-        following.save()
-        # return HttpResponseRedirect(reverse('profile', args=(users_id,)))
-    
-# def count_follow(request,user_id):
-        count_following =len(Following.objects.filter(user=user_id))
+        else: 
+            user_followed=User.objects.filter(id=users_id)[0]
+            followed=Follower(user=user_followed, follower_id=user_id)
+            followed.save()
+            following=Following(user=user,users_id=users_id)
+            following.save()
+            # return HttpResponseRedirect(reverse('profile', args=(users_id,)))
+            return JsonResponse({'follow':'saved'})
+        
+def count_follow(request,user_id):
+        count_following =len(Following.objects.filter(user=user_id))+1
         count=Following.objects.filter(user=user_id)
-        count_follower=len(Follower.objects.filter(user=user_id))
+        count_follower=len(Follower.objects.filter(user=user_id))+1
         # return render(request,'network/index.html',{'following':'count_following','follower':'count_follower','count':count})
-        return JsonResponse ({'following':count_following,'follower':count_follower,'count':count})
+        return JsonResponse ({'following':count_following,'follower':count_follower})
 
 
 def unfollow(request, users_id):

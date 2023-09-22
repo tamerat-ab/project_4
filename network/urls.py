@@ -22,7 +22,7 @@ urlpatterns = [
     path("<int:post_id>/unlike", views.unlike, name="unlike"),
     path("<int:post_id>/comment", views.comment, name="comment"),
     path("<int:post_id>/create_comment", views.create_comment, name="create_comment"),
-    # path("<int:post_id>/count_follow", views.count_follow, name="count_follow"),
+    path("<int:user_id>/count_follow", views.count_follow, name="count_follow"),
     path("<int:post_id>/delete", views.delete, name="delete"),
 ]
 if settings.DEBUG:
