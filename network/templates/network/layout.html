@@ -188,7 +188,7 @@ body {
     background-color:aliceblue;
 }
 #section{
-    background-color:aliceblue;
+    background-color:rgb(15, 168, 25);
     margin-top: 10px;
     width: auto;
     height: auto;
@@ -196,7 +196,7 @@ body {
 
 #create-post,#edit-post{
     display: flex;
-        flex-direction: row;
+        flex-direction: column;
         flex-wrap: nowrap;
         justify-content: flex-start;
         align-items: stretch;
@@ -208,6 +208,21 @@ body {
         margin:auto;
         border: solid;     
         background-color:aliceblue;}
+#edit-post{
+    display: flex;
+        flex-direction: column;
+        flex-wrap: nowrap;
+        justify-content: flex-start;
+        align-items: stretch;
+        align-content: stretch;
+        width:95%;
+        padding-top: -20px;
+        position: relative;
+        margin-bottom:15px; 
+        margin:auto;
+        border: solid;     
+        background-color:aliceblue;
+        margin-top:5px;}
         
 #post-header{
         margin-left:30px
@@ -215,12 +230,12 @@ body {
 
 #textarea
     {
-        display: flex;
+        /* display: flex;
         flex-direction: row;
         flex-wrap: nowrap;
         justify-content: flex-start;
         align-items: stretch;
-        align-content: stretch;
+        align-content: stretch; */
         width:95%;
         margin:auto;
         margin-bottom: -25px; 
@@ -237,7 +252,7 @@ body {
     margin-bottom:20px;
     width:70px;} 
 
-#post-container
+#post-container,#following-post-container
 {
     background-color:aliceblue;
     border: 2px solid;
@@ -248,7 +263,7 @@ body {
     margin-top: 20px;
     /* opacity:0.8; */
 }
-#all-posts,#following-post,#profile-box{
+#all-posts,#profile-box,#user-following{
     display: flex;
     flex-direction: column;
     flex-wrap: nowrap;
@@ -521,15 +536,16 @@ img{
                     <ul class="nav-list">
                         {% if user.is_authenticated %}
                         <li><a id="username" href="#">{{ user.username }}</a></li>
-                        <!-- <li><a id="create-post" href="">Create A post</a></li> -->
+                        
                        
                      
                         <li><a id="posts" href="">All Posts</a>
                          
                         <li><a id="following_url" href="">Following</a>
-                        <!-- <li><a id="following_url" href="{% url 'following_post' %}">Following</a> -->
+                       
                         <li><a href="{% url 'logout' %}">Log out</a>
                         {% else %}
+                        
                         <li><a href="{% url 'login' %}">Log In</a>
                         <li><a href="{% url 'register' %}">Register</a></li>
                         {% endif %}
@@ -545,6 +561,7 @@ img{
         </div>
         
         <div class="body">
+            
             {% block body %}
             {% endblock %}
         </div>
