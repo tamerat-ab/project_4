@@ -1,5 +1,5 @@
 document.addEventListener('DOMContentLoaded', () =>{
-  // post_list();
+  post_list();
  document.getElementById('posts').onclick=post_list();
   create_post();
   delete_post();
@@ -14,17 +14,17 @@ document.addEventListener('DOMContentLoaded', () =>{
   create_comment();
   like_count();
   // count_follow();
-  post_list();
+  // post_list();
 
 })
 
 function post_list() {
 
-  document.getElementById('create-post').style.display="block";
+  document.getElementById('create-post').style.display="none";
   document.getElementById('post-container').style.display="block";
   document.getElementById('following-post-container').style.display="none";
-  document.getElementById('profile-container').style.display="none";
- document.getElementById('edit-post').style.display="none";
+  document.getElementById('profile-container').style.display="block";
+ document.getElementById('edit-post').style.display="block";
  }
  
 function create_post(){ 
@@ -253,19 +253,31 @@ function edit (){
    const text_field=data[0]['text_field'];
    const date =data[0]['date'];
    const id = data[0]['id'];
+   console.log(id);
    const edit_div=document.getElementById('edit-post');
    const post_form=document.getElementById('post-form');
-   const edit_post=post.cloneNode(true);
+   const edit_post=post_form.cloneNode(true);
   //  const form=document.querySelector('#post-form');
    const text=document.querySelector('#textarea');
-  //  text.value=text_field
-   text.innerHTML=text_field
+   edit_post.textarea.innerHTML=text_field
+   edit_post.setAttribute('data-data',`${id}`);
    edit_div.appendChild(edit_post)
-   form.onsubmit=function(){
-    fetch(`${id}/update`,
-         {method: 'PUT', body:json.stringify({text_field:text_field})});};
+   edit_div.appendChild(edit_post)
+   console.log(edit_post)
+   div=document.querySelector('[data-data]')
+   console.log(div);});
 
-  });
+   const div1=document.querySelector('#post-form');
+   console.log(div1);
+   div1.onsubmit=function(event){
+   const id=event.target.getAttribute('data-data')
+    const texter=document.querySelector('#textarea')
+    fetch(`${id}/update`,
+         {method: 'PUT', body:json.stringify({text_field:texter})})
+         console.log('method')
+         .then(response => response.json())
+         .then(data =>{console.log(data)})
+         ;}
  }})
 };
 
@@ -279,7 +291,7 @@ function following (){
     document.getElementById('following-post-container').style.display="block";
     document.getElementById('profile-container').style.display="none";
     document.getElementById('edit-post').style.display="none";                      
-                         
+  
 
   fetch('/following_post')
   .then(response=>response.json())
