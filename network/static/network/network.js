@@ -1,6 +1,6 @@
 document.addEventListener('DOMContentLoaded', () =>{
   post_list();
- document.getElementById('posts').onclick=post_list();
+document.getElementById('posts-posts').onclick=post_list();
   create_post();
   delete_post();
   profile();
@@ -13,18 +13,20 @@ document.addEventListener('DOMContentLoaded', () =>{
   edit();
   create_comment();
   like_count();
+  // edit_edit();
   // count_follow();
   // post_list();
 
 })
 
+
 function post_list() {
 
-  document.getElementById('create-post').style.display="none";
+  document.getElementById('create-post').style.display="block";
   document.getElementById('post-container').style.display="block";
   document.getElementById('following-post-container').style.display="none";
-  document.getElementById('profile-container').style.display="block";
- document.getElementById('edit-post').style.display="block";
+  document.getElementById('profile-container').style.display="none";
+  document.getElementById('edit-post').style.display="none";
  }
  
 function create_post(){ 
@@ -48,6 +50,10 @@ function create_post(){
                         // you can crete a popup message here
             });
           }}
+
+function reference(){
+  const edit=document.getElementById('')
+}
 
 function delete_post(){
   const delete_post=document.getElementById('btn-delete') ;
@@ -76,7 +82,7 @@ function delete_post(){
   document.getElementById('post-container').style.display="none";
   document.getElementById('following-post-container').style.display="none";
   document.getElementById('profile-container').style.display="block";
-  document.getElementById('edit-post').style.display="none";
+  // document.getElementById('edit-post').style.display="none";
 
   // id = event.target.profile.setdata.profile
   fetch(`/${profile_id}/profile`)
@@ -206,19 +212,27 @@ document.querySelector(`[data-comment='${id}']`).style.display="block";
   
   for(var i=0; i< data.length; i++){
     console.log(data.length)
-          const commenter=data[i]['current_user']
+          const commenter1=data[i]['current_user']
+          const commenter=commenter1.toUpperCase();
           const comment=data[i]['comment']
           const date=data[i]['date']
           console.log(comment)
           const comment_post=document.querySelector(`[data-cpost="${id}"]`);
           const comment_commenter=document.createElement('div');
+          comment_commenter.setAttribute('id','cmnt-name')
           const comment_comment=document.createElement('div');
+          comment_comment.setAttribute('id','cmnt-text');
           const comment_date=document.createElement('div');
+          comment_date.setAttribute('id','cmnt-date')
+          const comment_container=document.createElement('div');
+          comment_container.setAttribute('id','cmnt-container')
           console.log(comment_comment)
-          comment_commenter.appendChild(document.createTextNode(commenter))
+          comment_commenter.appendChild(document.createTextNode(`${commenter}  :`))
           comment_comment.appendChild(document.createTextNode(comment))
           comment_date.appendChild(document.createTextNode(date))
-          comment_post.append(comment_commenter,comment_comment,comment_date)
+          comment_container.append(comment_commenter,comment_comment,comment_date)
+          comment_post.append(comment_container)
+          // comment_post.append(comment_commenter,comment_comment,comment_date)
           console.log(comment_comment)}
 
         })  
@@ -259,27 +273,44 @@ function edit (){
    const edit_post=post_form.cloneNode(true);
   //  const form=document.querySelector('#post-form');
    const text=document.querySelector('#textarea');
+   console.log(text);
+   text.setAttribute('data-data',`${id}`);
    edit_post.textarea.innerHTML=text_field
    edit_post.setAttribute('data-data',`${id}`);
+   
    edit_div.appendChild(edit_post)
-   edit_div.appendChild(edit_post)
+  //  edit_div.appendChild(edit_post)
+   console.log(edit_div)
    console.log(edit_post)
-   div=document.querySelector('[data-data]')
-   console.log(div);});
-
-   const div1=document.querySelector('#post-form');
-   console.log(div1);
-   div1.onsubmit=function(event){
-   const id=event.target.getAttribute('data-data')
-    const texter=document.querySelector('#textarea')
+   console.log(edit_post.textarea.value);
+   edit_post.onsubmit=function(event){
+   const texter= event.target.textarea.value
+    console.log(texter)
+  
     fetch(`${id}/update`,
-         {method: 'PUT', body:json.stringify({text_field:texter})})
+         {method: 'PUT', body:JSON.stringify({text_field:texter})})
          console.log('method')
          .then(response => response.json())
-         .then(data =>{console.log(data)})
+         .then(data =>{console.log('data')})
          ;}
+   })
+
  }})
 };
+
+// function edit_edit(){
+//   const div1=document.querySelectorAll('[data-data]');
+//   console.log(div1);
+//   div1.onsubmit=function(event){
+//   const id=event.target.getAttribute('data-data')
+//    const texter=document.querySelector('#textarea')
+//    fetch(`${id}/update`,
+//         {method: 'PUT', body:json.stringify({text_field:texter})})
+//         console.log('method')
+//         .then(response => response.json())
+//         .then(data =>{console.log(data)})
+//         ;}
+// }
 
 function following (){
   // inssert event listeners here
@@ -296,19 +327,28 @@ function following (){
   fetch('/following_post')
   .then(response=>response.json())
   .then(data=>{console.log(data);
-
-    const following_post=document.querySelector('#following-post')
-    const div_following=document.createElement('div');
-    const div_following1=document.createElement('div')
-    const div_following2=document.createElement('div')
-     for(var i=0;data.length;i++){
-      username=data[i]['user'];
-      text_field=data[i]['text_field'];
-      date=data[i]['date_created_on'];
-      div_following.appendChild(document.createTextNode(username));
+     for(let i=0; data.length; i++){
+      const user_following = document.getElementById('user-following');
+      const following_post=document.querySelector('#following-post-container');
+      const div_following=document.createElement('div');
+      const div_following1=document.createElement('div');
+      const div_following2=document.createElement('div');
+      // console.log(err.response.data.errors)
+      let user=data[i]['user']
+      let text_field=data[i]['text_field']
+      let date=data[i]['date_created_on']
+    //   const post_list=document.getElementById('post-list');
+    //  const  edit_post=post_list.cloneNode(true)
+    // //  edit_post.removeChild(edit_post.children[4]);
+    //  console.log(edit_post)
+      div_following.appendChild(document.createTextNode(user));
       div_following1.appendChild(document.createTextNode(text_field));
-      div_following2.appendChild(document.createTextNode(date_created_on));
-      following_post.appendChild(div_following, div_following1,div_following2);
+      div_following2.appendChild(document.createTextNode(date));
+      user_following.appendChild( div_following, div_following1, div_following2);
+      // user_following.appendChild(edit_post);
+      console.log(text_field)
+      console.log(user)
+      console.log(date)
      }
   });}
 }

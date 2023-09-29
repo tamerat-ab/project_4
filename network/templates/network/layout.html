@@ -5,16 +5,31 @@
     <head>
         <meta name="viewport" content="width=device-width, initial-scale=1.0">
         <title>{% block title %}Social Network{% endblock %}</title>
-        <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css">       
-        <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/css/bootstrap.min.css" integrity="sha384-Vkoo8x4CGsO3+Hhxv8T/Q5PaXtkKtu6ug5TOeNV6gBiFeWPGFN9MuhOf23Q9Ifjh" crossorigin="anonymous">
+
+        <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@4.0.0/dist/css/bootstrap.min.css" integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm" crossorigin="anonymous">
+        <script src="https://code.jquery.com/jquery-3.2.1.slim.min.js" integrity="sha384-KJ3o2DKtIkvYIK3UENzmM7KCkRr/rE9/Qpg6aAZGJwFDMVNA/GpGFF93hXpG5KkN" crossorigin="anonymous"></script>
+        <script src="https://cdn.jsdelivr.net/npm/popper.js@1.12.9/dist/umd/popper.min.js" integrity="sha384-ApNbgh9B+Y1QKtv3Rn7W3mgPxhU9K/ScQsAP7hUibX39j7fakFPskvXusvfa0b4Q" crossorigin="anonymous"></script>
+        <script src="https://cdn.jsdelivr.net/npm/bootstrap@4.0.0/dist/js/bootstrap.min.js" integrity="sha384-JZR6Spejh4U02d8jOt6vLEHfe/JQGiRRSQQxSfFWpi1MquVdAyjUar5+76PVCmYl" crossorigin="anonymous"></script>
+
+
+        <!-- <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css">       
+        <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/css/bootstrap.min.css" integrity="sha384-Vkoo8x4CGsO3+Hhxv8T/Q5PaXtkKtu6ug5TOeNV6gBiFeWPGFN9MuhOf23Q9Ifjh" crossorigin="anonymous"> -->
         <link href="{% static 'network/styles.css' %}" rel="stylesheet">
         <script src="{% static 'network/network.js' %}"></script>
         {% block script%}
         {% endblock%}
 
         <style>
+        .nav-bar{
+            width: 100%;
+            height: 20%;
 
-* {
+        }
+       .navbar{
+        width: 100%;
+        height: auto;
+       }
+/* * {
         margin: 0;
         padding: 0;
         font-family: Segoe UI;
@@ -22,7 +37,7 @@
     
     .nav-bar{
         height: 70px;
-        background: #262626;
+         background: #262626; 
     }
     
     .brand{
@@ -181,17 +196,20 @@
         .nav-list{
             display: block !important;
         }
-    }
+    } */
 
     /* #nav-bar{background-color: blue; color: brown;}            */
 body {
     background-color:aliceblue;
+    width: 100%;
+    height: 100%;
+    position: absolute;
 }
 
 
 
 #section{
-    background-color:rgb(15, 168, 25);
+    background-color:aliceblue;
     margin-top: 10px;
     width: auto;
     height: auto;
@@ -258,7 +276,7 @@ body {
 #post-container,#following-post-container
 {
     background-color:aliceblue;
-    border: 2px solid;
+    /* border: 2px solid; */
     padding: 25px;
     width:95%;
     margin: auto;
@@ -339,13 +357,25 @@ body {
     border-style:outset;  
     /* background-color: aliceblue; */
     border-radius: 10px;
-}
-img{
-    width: 100px;
-    height: 100px;
+    text-align: center;
 }
 
-#btn-edit, #btn-delete, #btn-like, #btn-unlike,#btn-comment,#id1,#id2,#id3{
+#cmnt-container{
+    display: flex;
+    flex-direction: row;
+    flex-wrap: nowrap;
+    justify-content: flex-start;
+    align-items: stretch;
+    align-content: stretch;
+    width:100%;
+    margin-bottom: 50px;
+    height: auto;
+    border-style:outset;  
+    /* background-color: aliceblue; */
+    border-radius: 10px;
+    text-align: center;  
+}
+#btn-edit, #btn-delete, #btn-unlike,#btn-comment,#id1,#id2,#id3{
   
     height: 20px;
     padding-left: 5px;
@@ -516,54 +546,131 @@ img{
       background-color:azure;
     }
 #btn-count{
-    width:34px;
+    width:3px;
     margin: 1px;
-    background-color: azure;
+    background-color: rgb(164, 99, 19);
     border-color: #262626 ;
   
 }
+#count-div{
+    display: flex;
+    flex-direction: row;
+    flex-wrap: nowrap;
+    justify-content: flex-start;
+    align-items: stretch;
+    align-content: stretch;
+    position: relative;
+
+   /* background-color: #2ab1ce; */
+    /* height: 20px; */
+    padding-left: 5px;
+    padding-right: 5px;
+    padding-bottom: 40px;
+    text-align: center;
+    margin: auto;
+    border-radius: 15px;
+    margin-bottom: 10px;
+  
+
+}
+#image{
+    width: 20px;
+    height: 20px;
+    margin-left: 1px;
+}
+#like-image{
+margin-left: 10px;
+/* background-color: brown; */
+/* border-radius: solid black; */
+margin-top: -28px;
+margin-left: 40px;
+}
+#btn-like{
+margin-left: 10px;
+}
+
 
 </style>
     </head>
     <body>
         <div class="nav-bar">
-            <div class="nav-container">
-                <div class="brand">
-                    <a href="#">Network</a>
-                </div>
-                <nav>
-                    <div class="nav-mobile">
-                        <a href="#" id="nav-toggle">
-                            <span></span>
-                        </a>
+                    <!-- <div class="nav-container">
+                        <div class="brand">
+                            <a href="#">Network</a>
+                        </div>
+                        <nav>
+                            <div class="nav-mobile">
+                                <a href="#" id="nav-toggle">
+                                    <span></span>
+                                </a>
+                            </div>
+                            <ul class="nav-list">
+                                {% if user.is_authenticated %}
+                                <li><a id="username" href="#">{{ user.username }}</a></li>
+                                
+                            
+                            
+                                <li><a id="posts-posts" href="">All Posts</a></li>
+                                
+                                <li><a id="following_url" href="#following-post-container">Following</a></li>
+                            
+                                <li><a href="{% url 'logout' %}">Log out</a></li>
+                                {% else %}
+                                
+                                <li><a href="{% url 'login' %}">Log In</a></li>
+                                <li><a href="{% url 'register' %}">Register</a></li>
+                                {% endif %} -->
+                                <!-- <ul class="nav-dropdown">
+                                    <li><a href="#">Link 1</a></li>
+                                    <li><a href="#">Link 1</a></li>
+                                    <li><a href="#">Link 1</a></li>
+                                </ul> -->        
+                            
+                            <!-- </ul>
+                        </nav>
                     </div>
-                    <ul class="nav-list">
-                        {% if user.is_authenticated %}
-                        <li><a id="username" href="#">{{ user.username }}</a></li>
-                        
-                       
-                     
-                        <li><a id="posts" href="">All Posts</a></li>
-                         
-                        <li><a id="following_url" href="#following-post-container">Following</a></li>
-                       
-                        <li><a href="{% url 'logout' %}">Log out</a></li>
-                        {% else %}
-                        
-                        <li><a href="{% url 'login' %}">Log In</a></li>
-                        <li><a href="{% url 'register' %}">Register</a></li>
-                        {% endif %}
-                        <!-- <ul class="nav-dropdown">
-                            <li><a href="#">Link 1</a></li>
-                            <li><a href="#">Link 1</a></li>
-                            <li><a href="#">Link 1</a></li>
-                        </ul> -->        
-                       
-                    </ul>
-                </nav>
-            </div>
+adfklsjflsjfljdssl -->
+                    <nav class="navbar"><nav class="navbar navbar-expand-lg navbar-light bg-light">
+
+                        <a class="navbar-brand" href="#">Network</a>
+                        <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+                          <span class="navbar-toggler-icon"></span>
+                        </button>
+                      
+                        <div class="collapse navbar-collapse" id="navbarSupportedContent">
+                          <ul class="navbar-nav mr-auto">
+                            <li class="nav-item active">
+                              <a class="nav-link"  id="username"  href="">{{user.username}}<span class="sr-only">(current)</span></a>
+                            </li>
+                            <li class="nav-item">
+                              <a class="nav-link" id="posts-posts" href="">All Posts</a>
+                            </li>
+                            <li class="nav-item">
+                              <a class="nav-link" id="following_url" href="#following-post-container">Following</a>
+                            </li>
+                            <li class="nav-item">
+                              <a class="nav-link"  href="{% url 'logout' %}">logout</a>
+                            </li>
+                            <li class="nav-item">
+                              <a class="nav-link" href="{% url 'login' %}">login</a>
+                            </li>
+                            <li class="nav-item">
+                              <a class="nav-link"  href="{% url 'register' %}">Register</a>
+                            </li>
+                             
+                          </ul>
+                          <form class="form-inline my-2 my-lg-0">
+                            <input class="form-control mr-sm-2" type="search" placeholder="Search" aria-label="Search">
+                            <button class="btn btn-outline-success my-2 my-sm-0" type="submit">Search</button>
+                          </form>
+                        </div>
+                      </nav> 
+
         </div>
         
+
+
+
         <div class="body">
             
             {% block body %}

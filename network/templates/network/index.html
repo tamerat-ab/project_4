@@ -28,16 +28,18 @@
               <div id="post-list">
                 
                       <button data-profile="{{post.user.id}}" id="username-link" >{{post.user.username}}</button> <br>
+                      {% if post.user.username == user.username %}
                       <a data-edit="{{post.id}}" id="btn-edit" href="#edit-post">edit</a>
+                      {% endif %}
                       <h3>{{post.text_field}} </h3> <br>
                       <h3>{{post.date_created_On}} </h3> <br>
                  
-                      <!-- <a data-ID="{{post.id}}" id="btn-edit" href="">edit</a> -->
-                      <div id="count-div">   <a data-like="{{post.id}}" id="btn-like" href=""> like</a>    <div id="like-image"></div> </div>
-                      <!-- <img src="{% static 'network/heart.png' %}" alt="">
-                      <img src="{% static 'network/friends.jpg' %}" alt=""> -->
+                      
+                      <div id="count-div"> <a data-like="{{post.id}}" id="{{post.user.username}}" id="btn-like" href=""><img id="image" src="{% static 'network/heart.png' %}" alt=""> </a> </div>
                       <a data-unlike="{{post.id}}" id="btn-unlike" href=""> unlike</a><br>
+                      
                       <a data-delete="{{post.id}}" id="btn-delete" href=""> Delete</a><br>
+                     
                       <button data-comments="{{post.id}}" id="btn-comment">Comments</button>
               </div>
 
@@ -82,7 +84,7 @@
 
 <div id="following-post-container">   
             <div id="following-title">Following Posts</div> 
-            <div id="user-following">come on </div>       
+            <div id="user-following"> </div>       
 </div>       
      
 
@@ -117,8 +119,8 @@
 
 
 <div id=edit-post>
-         <h1>this is edit page</h1>
-<div id="fuck"> <div></div></div>
+         <h1>Post being edited ...</h1>
+
                   <!-- <form id="post-form" action="" method="">
                     <textarea name="text_field" id="textarea" > </textarea> <br>
                     <button id="form-button" type="submit">update</button>

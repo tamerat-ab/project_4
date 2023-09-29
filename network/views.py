@@ -202,12 +202,12 @@ def update(request,id):
  
     if request.method=='PUT':
         data=json.loads(request.body)
-        if data.get(text_field) is not None:
-            text_field=data.get('text_field')
-            post=Posts.objects.filter(user=user,id=id)
-            post.text_field= text_field
-            post.save()
-            return JsonResponse( {'message':'Successfully updated'},status=200)
+        # if data.get(text_field) is not None:
+        text_field=data.get('text_field')
+        post=Posts.objects.get(user=user,id=id)
+        post.text_field= text_field
+        post.save()
+        return JsonResponse( {'message':'Successfully updated'},status=200)
     else:
         return JsonResponse( {'error': 'Invalid'}, status=400)
     
