@@ -3,44 +3,61 @@
 {% static 'network/styles.css' %}
 
 {% block body %}
+{{ request.user.id|json_script:"user_id" }}
 
-
+{% if user.is_authenticated %}
 <section id="section">
 
-<div id="create-post">
-     <h3 id="post-header">New Post</h3>
+        <div id="create-post">
+            <h3 id="post-header">New Post</h3>
 
-     <form id="post-form">
-      
-          <textarea name="text_field" id="textarea"  placeholder="write your post here"></textarea> <br>
-          <button id="form-button" type="submit">post</button>
-     </form>
-  
-</div>
+            <form id="post-form">
+              
+                  <textarea name="text_field" id="textarea"  placeholder="write your post here"></textarea> <br>
+                  <button id="form-button" type="submit">post</button>
+            </form>
+          
+        </div>
 
  
 
 <div id="post-container">
+  {% if page_obj %}
   <div id="post-title">All posts</div>
   {% for post in page_obj %}
       <div id="all-posts">
 
               <div id="post-list">
-                
+              
                       <button data-profile="{{post.user.id}}" id="username-link" >{{post.user.username}}</button> <br>
-                      {% if post.user.username == user.username %}
-                      <a data-edit="{{post.id}}" id="btn-edit" href="#edit-post">edit</a>
-                      {% endif %}
-                      <h3>{{post.text_field}} </h3> <br>
-                      <h3>{{post.date_created_On}} </h3> <br>
+                    
+                      <h3 id="post-txt">{{post.text_field}} </h3> <br>
+                      <h3 id="post-date">{{post.date_created_on}} </h3> <br>
                  
-                      
-                      <div id="count-div"> <a data-like="{{post.id}}" id="{{post.user.username}}" id="btn-like" href=""><img id="image" src="{% static 'network/heart.png' %}" alt=""> </a> </div>
-                      <a data-unlike="{{post.id}}" id="btn-unlike" href=""> unlike</a><br>
-                      
-                      <a data-delete="{{post.id}}" id="btn-delete" href=""> Delete</a><br>
-                     
-                      <button data-comments="{{post.id}}" id="btn-comment">Comments</button>
+                     <div id="count-div"> <a data-img="{{post.id}}" id="{{post.user.username}}" class="btn-like-img" href=""><img id="image" src="{% static 'network/heart.png' %}" alt=""> </a> </div>
+                      <div class="btn-div">
+                          
+                              {% if post.user.username == user.username %}
+                              <a data-edit="{{post.id}}" id="btn-edit" href="#edit-post">edit</a>      
+                              <a data-delete="{{post.id}}" id="btn-delete" href=""> Delete</a><br>
+                              <button data-comments="{{post.id}}" id="btn-comment">Comments</button>
+                              {% else %}
+
+                              {% if post.like_set.all %}
+
+                              {% for like in  post.like_set.all %}
+                              {% if like.liking_user == user.id %}
+                              <a data-unlike="{{post.id}}" id="btn-unlike" href=""> unlike</a><br>
+                               {% else %}
+                              <a data-like="{{post.id}}" id="btn-like" href=""> like</a><br>
+                              {% endif %}
+                              {% endfor %}
+                              {% else %}
+                              <a data-like="{{post.id}}" id="btn-like" href=""> like</a><br>
+                              {% endif %}
+                              <button data-comments="{{post.id}}" id="btn-comment">Comments</button>
+                              {% endif %}
+                      </div>
               </div>
 
               <div id="comment-box"  data-comment="{{post.id}}"> 
@@ -63,28 +80,99 @@
       </div>
 {% endfor %}
           <center>
-          <div>
-              <span>
-                {% if page_obj.has_previous %}
-                  <a href="?page={{ page_obj.previous_page_number }}">Previous</a>
-                {% endif %}
-                <span>
-                  Page {{ page_obj.number }} of {{ page_obj.paginator.num_pages }}.
-                </span>
-                {% if page_obj.has_next %}
-                  <a href="?page={{ page_obj.next_page_number }}">Next</a>
-                {% endif %}
-              </span>
-          </div>
+                <div>
+                    <span>
+                      {% if page_obj.has_previous %}
+                        <a href="?page1={{ page_obj.previous_page_number }}"> Previous</a>
+                      {% endif %}
+                      <span>
+                        Page {{ page_obj.number }} of {{ page_obj.paginator.num_pages }}.
+                      </span>
+                      {% if page_obj.has_next %}
+                        <a href="?page1={{ page_obj.next_page_number }}">Next</a>
+                      {% endif %}
+                    </span>
+                </div>
           </center>
-
+{% endif %}
 </div>
 
- 
 
 <div id="following-post-container">   
             <div id="following-title">Following Posts</div> 
-            <div id="user-following"> </div>       
+           
+           {% if page %}
+           {% for page in page %}
+             <div id="user-following">
+           
+            
+              
+                      <button data-profile="{{page.user.id}}" id="username-link" >{{page.user.username}}</button> <br>
+                    
+                      <h3 id="post-txt">{{page.text_field}} </h3> <br>
+                      <h3 id="post-date">{{page.date_created_on}} </h3> <br>
+                 
+                     <div id="count-div"> <a data-img="{{page.id}}" id="{{page.user.username}}" class="btn-like-img" href=""><img id="image" src="{% static 'network/heart.png' %}" alt=""> </a> </div>
+                      <div class="btn-div">
+                            <!-- <h1>{{page.id}}</h1> -->
+                              {% if page.user.username == user.username %}
+                              <a data-edit="{{page.id}}" id="btn-edit" href="#edit-post">edit</a>      
+                              <a data-delete="{{page.id}}" id="btn-delete" href=""> Delete</a><br>
+                              <button data-comments="{{page.id}}" id="btn-comment">Comments</button>
+                              {% else %}
+
+                              {% if page.like_set.all %}
+
+                              {% for page in  page.like_set.all %}
+                              {% if like.liking_user == user.id %}
+                              <a data-unlike="{{page.id}}" id="btn-unlike" href=""> unlike</a><br>
+                               {% else %}
+                              <a data-like="{{page.id}}" id="btn-like" href=""> like</a><br>
+                              {% endif %}
+                              {% endfor %}
+                              {% else %}
+                              <a data-like="{{page.id}}" id="btn-like" href=""> like</a><br>
+                              {% endif %}
+                              <button data-comments="{{page.id}}" id="btn-comment">Comments</button>
+                              {% endif %}
+                      </div>
+                      <div id="comment-box"  data-comment="{{page.id}}"> 
+                              <form data-form="{{page.id}}" id="comment-form">
+                                
+                
+                              <textarea data-textarea="{{page.id}}" name="comment" id="comment-area" cols="" rows="2" placeholder="comment"></textarea> 
+                              
+                              <input data-put="{{page.id}}"  type="submit" value="post" name="" id="comment-input">
+                            
+                              </form>
+                      
+              
+  
+                              <div data-cpost="{{page.id}}" id="comment-post">
+                                    
+                                    
+                              </div>
+                       </div> 
+          
+             </div>    
+             {% endfor %}
+             <center>
+              <div>
+                    <span>
+                    {% if page.has_previous %}
+                      <a href="?page2={{ page.previous_page_number }}">Previous</a>
+                    {% endif %}
+                    <span>
+                      Page {{ page.number }} of {{ page.paginator.num_pages }}.
+                    </span>
+                    {% if page.has_next %}
+                      <a href="?page2={{ page.next_page_number }}">Next</a>
+                    {% endif %}
+                    </span>
+              </div>
+              </center>
+           {% endif %}      
+               
 </div>       
      
 
@@ -96,22 +184,27 @@
                         <div id="user-name-div">
                         
                         </div>
-                        
+                     
                       <div id="follow-unfollow">
                             <div id="follow-button">
+                            
+                           
                               <button id="btn-follow">Follow</button> <div id="btn-count"></div>   
                             </div> 
 
                             <div id="unfollow-button">                  
                               <button id="btn-unfollow">Unfollow</button>                
                             </div> 
-                      
+                          
+                           
+                           
                             <div id="following-button">
                               <div id="div-following"> following </div>  <div id="btn-following"></div>   
                             </div> 
-                  
+                           
                             
                       </div>
+                     
                 </div>
                     
         </div>   
@@ -119,17 +212,14 @@
 
 
 <div id=edit-post>
-         <h1>Post being edited ...</h1>
+         <h5>Post being edited ...</h5>
 
-                  <!-- <form id="post-form" action="" method="">
-                    <textarea name="text_field" id="textarea" > </textarea> <br>
-                    <button id="form-button" type="submit">update</button>
-                  </for> -->
-             
+                   
 </div>
 
  
 </section>
+{% endif %}
 
 {% endblock %}
 

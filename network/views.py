@@ -11,28 +11,47 @@ from django.core.exceptions import ObjectDoesNotExist
 import json 
 from django.views.decorators.csrf import csrf_exempt
 
+@login_required
 def index(request):
-    posts = Posts.objects.all()  # fetching all post objects from database
-    p = Paginator(posts, 4)  # creating a paginator object
-    # getting the desired page number from url
-    page_number = request.GET.get('page')
+    user=request.user
+    posts = Posts.objects.all().order_by('-id')  # fetching all post objects from database
+  
+    paginator = Paginator(posts, 2)
+    page = request.GET.get('page1')
     try:
-        page_obj = p.get_page(page_number)  # returns the desired page object
+        page_obj = paginator.page(page)
     except PageNotAnInteger:
-        # if page_number is not an integer then assign the first page
-        page_obj = p.page(1)
+        page_obj = paginator.page(1)
     except EmptyPage:
-        # if page is empty then return last page
-        page_obj = p.page(p.num_pages)
-    context = {'page_obj': page_obj}
-    # sending the page object to index.html
-    return render(request, 'network/index.html', context)
+        page_obj = paginator.page(paginator.num_pages)
 
-    # user=request.user
-    # posts = Posts.objects.all()  # fetching all post objects from database
-    # return render(request, 'network/index.html',{'posts_list':posts})
 
-    # return render(request, "network/index.html")
+    # user=request.user 
+    followed_users_ids=[]
+    post_set=set()
+    followed_posts=[]
+    follower_ids= user.following_set.all()
+    for ids in follower_ids:
+        id=ids.users_id
+        post_set.add(id)
+    followed_users_ids=list(post_set)
+    for followed_user_id in followed_users_ids:
+        post=Posts.objects.filter(user=followed_user_id)
+        # followed_posts.append(list(post))
+        # followed=[posts for posts in post]
+        followed_posts+=post
+  
+    followed_posts   
+    paginator = Paginator(followed_posts, 1)
+    page = request.GET.get('page2')
+    try:
+        followed_posts = paginator.page(page)
+    except PageNotAnInteger:
+        followed_posts = paginator.page(1)
+    except EmptyPage:
+        followed_posts = paginator.page(paginator.num_pages)
+   
+    return render(request, 'network/index.html',{'page_obj':page_obj,'page':followed_posts})
 
 
 def login_view(request):
@@ -57,7 +76,7 @@ def login_view(request):
 
 def logout_view(request):
     logout(request)
-    return HttpResponseRedirect(reverse("index"))
+    return HttpResponseRedirect(reverse("login"))
 
 
 def register(request):
@@ -97,8 +116,8 @@ def create_post(request):
         # textfield =request.POST.get("text_field")
         post_list = Posts( user=user,text_field=textfield)
         post_list.save()
-        # return HttpResponseRedirect(reverse("post_list"))
-        return JsonResponse({'sucess': 'success'})
+        return HttpResponseRedirect(reverse("index"))
+        # return JsonResponse({'sucess': 'success'})
     
 @csrf_exempt 
 def delete(request,post_id):
@@ -106,8 +125,8 @@ def delete(request,post_id):
     post_id=data.get("post_id")
     post=Posts.objects.get(id=post_id)
     post.delete()
-    # return HttpResponseRedirect(reverse("post_list"))
-    return JsonResponse({'sucess': 'success'})
+    HttpResponseRedirect(reverse("index"))
+    # return JsonResponse({'sucess': 'success'})
 
 # def post_list(request):
 #     user=request.user
@@ -169,28 +188,46 @@ def unfollow(request, users_id):
 
 # @login_required()   
 def following_post(request):
-    followed_users_ids=[]
-    post_set=set()
-    followed_posts=[]
-    user=request.user
-    follower_ids= user.following_set.all()
-    for ids in follower_ids:
-        id=ids.users_id
-        post_set.add(id)
-    followed_users_ids=list(post_set)
-    for followed_user_id in followed_users_ids:
-        post=Posts.objects.filter(user=followed_user_id)
-        # followed_posts.append(list(post))
-        # followed=[posts for posts in post]
-        followed_posts+=post
-       
+    # user=request.user 
+    # followed_users_ids=[]
+    # post_set=set()
+    # followed_posts=[]
+  
+    # follower_ids= user.following_set.all()
+    # for ids in follower_ids:
+    #     id=ids.users_id
+    #     post_set.add(id)
+    # followed_users_ids=list(post_set)
+    # for followed_user_id in followed_users_ids:
+    #     post=Posts.objects.filter(user=followed_user_id)
+    #     # followed_posts.append(list(post))
+    #     # followed=[posts for posts in post]
+    #     followed_posts+=post
+  
+        
+    #     paginator = Paginator(followed_posts, 1)
+    #     page = request.GET.get('page2')
+    #     try:
+    #         followed_posts = paginator.page(page)
+    #     except PageNotAnInteger:
+    #         followed_posts = paginator.page(1)
+    #     except EmptyPage:
+    #         followed_posts = paginator.page(paginator.num_pages)
+ 
+    return render(request, 'network/index.html',{'page':'followed_posts'})
     # return render(request,"network/index.html", {'followed_users':followed_posts}) #{'all_posts':all_posts})
-    return JsonResponse([posts.serialize() for posts in followed_posts],safe=False)
+    # return render(request,"network/index.html", ) #{'all_posts':all_posts})
+    # return JsonResponse([posts.serialize() for posts in followed_posts],safe=False) # this is important one
     # return JsonResponse({'followed_posts':followed_posts})
+     
 
 # def edit(request,id):
 #     edit_post=Posts.objects.filter(id=id)
 #     return render(request,"network/index.html",{'edit_post':edit_post})
+
+# def following_page(request):
+#     return HttpResponseRedirect(reverse('following_post'))
+
 @csrf_exempt
 def update(request,id):
     user=request.user
@@ -212,51 +249,71 @@ def update(request,id):
         return JsonResponse( {'error': 'Invalid'}, status=400)
     
 
-     # if request.method=='post':
-    #     text_field=request.POST.get('text_field')
-    #     post=Posts.objects.get(user=user,id=id)
-    #     post.text_field=text_field
-    #     post.save()
-    # elif request.method == 'Get':
-    #     post=Posts.objects.get(user=user,id=id)
-    #     return JsonResponse([posts.serialize() for posts in post])
+
 @csrf_exempt    
 def like(request,post_id):
     if request.method=='POST':
         data=json.loads(request.body)
         post_id=data.get('id')
         user=request.user
-        user_liked=User.objects.filter(posts=post_id)[0]
-        post=Posts.objects.filter(id=post_id)[0]
+        post=Posts.objects.get(id=post_id)
+        # print(post)
+        user_liked=User.objects.get(posts=post)
+       
+        liked=Like(user=user_liked,post=post,liking_user=user.id)
+        liked.save()
+        post_liked=Posts.objects.filter(id=post_id)[0]
+        # print(post_liked)
+        # like_count=len(Like.objects.filter(post=post_liked))
+        like_count=Like.objects.filter(post=post_liked).count()
+        # print(like_count)
+        return JsonResponse( {'like_count':like_count}, status=200)
 
-        try:
-            get_user=Like.objects.filter(user=user_liked,post=post,liking_user=user.id)
-            if get_user.exists():
-                return JsonResponse({'user': 'liked'})
-        except: get_user.DoesNotExist()
+    if request.method == 'GET':
+        post_liked=Posts.objects.filter(id=post_id)[0]
+        # print(post_liked)
+        # like_count=len(Like.objects.filter(post=post_liked))
+        like_count=Like.objects.filter(post=post_liked).count()
+        # print(like_count)
+        return JsonResponse( {'like_count':like_count}, status=200)
     
-        else:
-            # liked=Like(user=user_liked,post=post,liking_user=user.id)
-            liked=Like(user=user_liked,post=post,liking_user=user.id)
-            liked.save()
-            # return JsonResponse({'user': 'liked'})
-    if request.method=='GET':
-            post_liked=Posts.objects.filter(id=post_id)[0]
-            like_count=len(Like.objects.filter(post=post_liked))
-            return JsonResponse( {'like_count':like_count}, status=200)
+    # if request.method=='GET':
+    #         post_liked=Posts.objects.filter(id=post_id)[0]
+    #         like_count=len(Like.objects.filter(post=post_liked))
+    #         return JsonResponse( {'like_count':like_count}, status=200)
 
 
 def unlike(request,post_id):
     user=request.user
-    user_liked=User.objects.filter(posts=post_id)[0]
-    post=Posts.objects.filter(id=post_id)[0]
+    # print(post_id)
+    post=Posts.objects.get(id=post_id)
+    # print(post)
+    user_liked=User.objects.get(posts=post)
+    get_user=Like.objects.get(liking_user=user.id,post=post)
+    # print(get_user)
+    get_user.delete()
+    # print(get_user)
+    return JsonResponse({'user':'disliked'})
+   
+    # try:
+      
+    #     # get_user=Like.objects.get(user=user_liked,post=post,liking_user=user.id)
+    #     get_user=Like.objects.get(liking_user=user.id)
+    #     # print(get_user)
+    #     # print(get_user)
+    #     if get_user.exists():
+    #        get_user.delete()
+    #        return JsonResponse({'user':'disliked'})
+    # except: #get_user.DoesNotExist()
+        # return JsonResponse({'user':'disliked'})
 
-    try:
-        get_user=Like.objects.filter(user=user_liked,post=post,liking_user=user.id)
-        if get_user.exists():
-           get_user.delete()
-           return JsonResponse({'user':'disliked'})
-    except: get_user.DoesNotExist()
+# def get_like(request,post_id):
+#     user=request.user
+#     if request.method == 'GET':
+#          try:
+#             likes=Like.objects.filter(liking_user=User.id,post=post_id)
+#             if likes.exists():
+                
 
 @csrf_exempt 
 @login_required() 
@@ -270,8 +327,9 @@ def create_comment(request,post_id):
         post=Posts.objects.filter(id=post_id)[0]
         comment2=Comment(post=post,comment=comment1,current_user=user)
         comment2.save()
-        # return HttpResponseRedirect(reverse('post_list'))
-        return JsonResponse({'comment':'comment'})
+        return HttpResponseRedirect(reverse('index'))
+        # return JsonResponse({'comment':comment2})
+    
 def comment(request, post_id):
         if request.method == 'GET':
             try:
@@ -284,17 +342,7 @@ def comment(request, post_id):
             except:
                 return JsonResponse({'comments':'no comment available'})
             
-   # if request.method == "GET":
-    #     posts=Posts.objects.filter(id=post_id)[0]
-    #     comments=Comment.objects.filter(post=posts)
-    #     return JsonResponse([comment.serialize() for comment in comments])
-        # return HttpResponseRedirect(reverse('post_list'))
-        # try:
-        #     # comments=Comment.objects.filter(post=post,user=users) 
-        #     return render(request,'network/index.html',{'comments':'comments'})
-            
-        # except:return JsonResponse({'doesnotexist':'does not exist'})
-        # return render(request,'network/index.html',{'comments':'comments'})
+ 
            
 
 
