@@ -75,8 +75,10 @@ def login_view(request):
 
 
 def logout_view(request):
+    user=request.user
     logout(request)
-    return HttpResponseRedirect(reverse("login"))
+    # return HttpResponseRedirect(reverse(""))
+    return HttpResponseRedirect('login')
 
 
 def register(request):
@@ -156,8 +158,8 @@ def follow(request, users_id):
         try:
             followed_user=Following.objects.filter(user=user_id, users_id=users_id)
             if followed_user.exists():
-                return HttpResponseRedirect(reverse('profile', args=(users_id,)))
-                # return JsonResponse({'followed_id':'id_exits'})
+                # return HttpResponseRedirect(reverse('profile', args=(users_id,)))
+                return JsonResponse({'followed_id':'id_exits'})
         except: followed_user.DoesNotExist
 
         else: 
@@ -167,7 +169,7 @@ def follow(request, users_id):
             following=Following(user=user,users_id=users_id)
             following.save()
             # return HttpResponseRedirect(reverse('profile', args=(users_id,)))
-            return JsonResponse({'follow':'saved'})
+            return JsonResponse({'follow':'following'})
         
 def count_follow(request,user_id):
         count_following =len(Following.objects.filter(user=user_id))
@@ -289,7 +291,7 @@ def unlike(request,post_id):
     post=Posts.objects.get(id=post_id)
     # print(post)
     user_liked=User.objects.get(posts=post)
-    get_user=Like.objects.get(liking_user=user.id,post=post)
+    get_user=Like.objects.get(liking_user=user.id, post=post)
     # print(get_user)
     get_user.delete()
     # print(get_user)

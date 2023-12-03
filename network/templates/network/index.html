@@ -1,7 +1,6 @@
 {% extends "network/layout.html" %}
+{% static "network/layout.html"}
 {% load static %}
-{% static 'network/styles.css' %}
-
 {% block body %}
 {{ request.user.id|json_script:"user_id" }}
 
@@ -25,7 +24,7 @@
   {% if page_obj %}
   <div id="post-title">All posts</div>
   {% for post in page_obj %}
-      <div id="all-posts">
+      <div data-posts="{{post.user.id}}" id="all-posts">
 
               <div id="post-list">
               
@@ -34,27 +33,35 @@
                       <h3 id="post-txt">{{post.text_field}} </h3> <br>
                       <h3 id="post-date">{{post.date_created_on}} </h3> <br>
                  
-                     <div id="count-div"> <a data-img="{{post.id}}" id="{{post.user.username}}" class="btn-like-img" href=""><img id="image" src="{% static 'network/heart.png' %}" alt=""> </a> </div>
+                     <div id="count-div">
+                        <a data-img="{{post.id}}" id="{{post.user.username}}" class="btn-like-img" href="">
+                             <img id="image" src="{% static 'network/heart.png' %}" alt="heart picture"> 
+
+                             <div class="count-display"></div>
+                        </a>                      
+                    </div>
+
                       <div class="btn-div">
                           
                               {% if post.user.username == user.username %}
+                             
                               <a data-edit="{{post.id}}" id="btn-edit" href="#edit-post">edit</a>      
                               <a data-delete="{{post.id}}" id="btn-delete" href=""> Delete</a><br>
                               <button data-comments="{{post.id}}" id="btn-comment">Comments</button>
                               {% else %}
 
-                              {% if post.like_set.all %}
+                                      {% if post.like_set.all %}
 
-                              {% for like in  post.like_set.all %}
-                              {% if like.liking_user == user.id %}
-                              <a data-unlike="{{post.id}}" id="btn-unlike" href=""> unlike</a><br>
-                               {% else %}
-                              <a data-like="{{post.id}}" id="btn-like" href=""> like</a><br>
-                              {% endif %}
-                              {% endfor %}
-                              {% else %}
-                              <a data-like="{{post.id}}" id="btn-like" href=""> like</a><br>
-                              {% endif %}
+                                      {% for like in  post.like_set.all %}
+                                      {% if like.liking_user == user.id %}
+                                      <a data-like="{{post.id}}" id="btn-like" href=""> Unlike</a><br>
+                                      {% else %}
+                                      <a data-like="{{post.id}}" id="btn-like" href=""> Like</a><br>
+                                      {% endif %}
+                                      {% endfor %}
+                                      {% else %}
+                              <a data-like="{{post.id}}" id="btn-like" href=""> Like</a><br>
+                                      {% endif %}
                               <button data-comments="{{post.id}}" id="btn-comment">Comments</button>
                               {% endif %}
                       </div>
@@ -112,7 +119,15 @@
                       <h3 id="post-txt">{{page.text_field}} </h3> <br>
                       <h3 id="post-date">{{page.date_created_on}} </h3> <br>
                  
-                     <div id="count-div"> <a data-img="{{page.id}}" id="{{page.user.username}}" class="btn-like-img" href=""><img id="image" src="{% static 'network/heart.png' %}" alt=""> </a> </div>
+                     <div id="count-div"> 
+                          <a data-img="{{page.id}}" id="{{page.user.username}}" class="btn-like-img" href="">
+                            <img id="image" src="{% static 'network/heart.png' %}" alt="">
+                            <div class="count-display">
+
+                            </div>
+                          </a> 
+                      </div>
+                       
                       <div class="btn-div">
                             <!-- <h1>{{page.id}}</h1> -->
                               {% if page.user.username == user.username %}
@@ -121,21 +136,24 @@
                               <button data-comments="{{page.id}}" id="btn-comment">Comments</button>
                               {% else %}
 
-                              {% if page.like_set.all %}
+                                        {% if page.like_set.all %}
 
-                              {% for page in  page.like_set.all %}
-                              {% if like.liking_user == user.id %}
-                              <a data-unlike="{{page.id}}" id="btn-unlike" href=""> unlike</a><br>
-                               {% else %}
-                              <a data-like="{{page.id}}" id="btn-like" href=""> like</a><br>
-                              {% endif %}
-                              {% endfor %}
-                              {% else %}
-                              <a data-like="{{page.id}}" id="btn-like" href=""> like</a><br>
+                                        {% for page in  page.like_set.all %}
+                                        {% if like.liking_user == user.id %}
+                                        <a data-like="{{page.id}}" id="btn-like" href=""> Unlike</a><br>
+                                        {% else %}
+                                        <a data-like="{{page.id}}" id="btn-like" href=""> Like</a><br>
+                                        {% endif %}
+                                        {% endfor %}
+                                        {% else %}
+                            
+                              <a data-like="{{page.id}}" id="btn-like" href=""> Like</a><br>
                               {% endif %}
                               <button data-comments="{{page.id}}" id="btn-comment">Comments</button>
                               {% endif %}
+                            
                       </div>
+                     
                       <div id="comment-box"  data-comment="{{page.id}}"> 
                               <form data-form="{{page.id}}" id="comment-form">
                                 
@@ -178,35 +196,32 @@
 
 
 <div id="profile-container">
-<div id="profile-title">User Profile</div>
+       <div id="profile-title">User Profile</div>
         <div id="all-profile">
                 <div id="profile-div">
-                        <div id="user-name-div">
-                        
-                        </div>
+                      <div id="user-name-div">  </div>
                      
                       <div id="follow-unfollow">
-                            <div id="follow-button">
-                            
-                           
-                              <button id="btn-follow">Follow</button> <div id="btn-count"></div>   
-                            </div> 
 
-                            <div id="unfollow-button">                  
-                              <button id="btn-unfollow">Unfollow</button>                
-                            </div> 
-                          
-                           
-                           
-                            <div id="following-button">
-                              <div id="div-following"> following </div>  <div id="btn-following"></div>   
-                            </div> 
-                           
+                              <div id="follow-button">
+                                  <button id="btn-follow">Follow</button> 
+                                  <div id="btn-count"></div>   
+                              </div> 
+
+                              <div id="unfollow-button">                  
+                                  <button id="btn-unfollow">Unfollow</button>                
+                              </div> 
                             
-                      </div>
-                     
-                </div>
-                    
+                            
+                            
+                              <div class="following-button">
+                                  <div class="div-following"> Following  <div class="flw-btn"></div>    </div> 
+                                  <!-- <div class="btn-following"> hello</div>  -->
+                                  <!-- <div class="flw-btn">hi</div>    -->
+                              </div> 
+                                                      
+                      </div>                     
+                </div>                    
         </div>   
 </div>
 
@@ -219,6 +234,8 @@
 
  
 </section>
+
+
 {% endif %}
 
 {% endblock %}

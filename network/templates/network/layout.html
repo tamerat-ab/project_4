@@ -16,8 +16,8 @@
         <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/css/bootstrap.min.css" integrity="sha384-Vkoo8x4CGsO3+Hhxv8T/Q5PaXtkKtu6ug5TOeNV6gBiFeWPGFN9MuhOf23Q9Ifjh" crossorigin="anonymous"> -->
         <link href="{% static 'network/styles.css' %}" rel="stylesheet">
         <script src="{% static 'network/network.js' %}"></script>
-        {% block script%}
-        {% endblock%}
+        <!-- {% block script%}
+        {% endblock%} -->
 
         <style>
         .nav-bar{
@@ -270,6 +270,7 @@ width:10%
     flex-direction: row;
 }
 #follow-unfollow{
+    position: relative;
     display: flex;
     flex-direction: row;
     flex-wrap: nowrap;
@@ -282,7 +283,7 @@ width:10%
    
 }
 
-#follow-button{
+#follow-button,#unfollow-button{
     display: flex;
     flex-direction: row;
     flex-wrap: nowrap;
@@ -290,56 +291,97 @@ width:10%
     align-items: stretch;
     align-content: stretch;
     position: relative;
-    width: 200px;;
+    /* width: 200px; */
     /* background-color: red; */
+    width: 35%;
     margin-left: 0px;
     margin-right: 20px;
-    #btn-count{
-        width: 50px;
-       
+}
+#btn-follow,#btn-unfollow{ width:110px; margin:1px;
+      border-color: #262626;
+      background-color:azure;
+      border-radius: 10%;
+      font-weight: bolder
+    }
+ #btn-count{
+        width: 20%;
+        text-align:center;
+        padding-top: 6%;
         border-top-right-radius: 30px;
         border-bottom-right-radius: 30px;
-        background-color:aliceblue
-    };
-
-}
-
-#following-button{
-    display: flex;
-    flex-direction: row;
-    flex-wrap: nowrap;
-    justify-content: flex-start;
-    align-items: stretch;
-    align-content: stretch;
-    position: relative;
-    margin-left: 800px;
-    /* background-color: red; */
-    width:150px;
-    #div-following{
-     background-color: aliceblue;
-     border-radius:20px;
-     width:100px
-    };
-    #btn-following{
-        background-color: aliceblue;
-    }
-}
-
-#unfollow-button{
-    display: flex;
-    flex-direction: row;
-    flex-wrap: nowrap;
-    justify-content: flex-start;
-    align-items: stretch;
-    align-content: stretch;
-    position: relative;
-    background-color: red;
-    margin-left: 10px;}
-    #btn-unfollow{
         background-color:aliceblue;
-    
+        font-weight: bolder
+    };
+
+#btn-unfollow{
+        background-color:aliceblue; 
+        font-weight: bolder
     }
+.following-button{
+    display: flex;
+    flex-direction: row;
+    flex-wrap: nowrap;
+    justify-content: flex-start;
+    align-items: stretch;
+    align-content: stretch;
+    position: relative;
+    /* margin-left: 800px; */
+    /* background-color: red; */
+    /* width:150px; */
+    padding-left: 30%;
+    width: 80%;
+    /* background-color: yellow; */
+}
+.flw-btn{font-size: 200px;
+    position: relative;
+    font-size: 30px;
+    margin-left:70%;
+       right: 50%;
+        /* width:100%; */
+        width: auto;
+        height: 100%;
+        color: #262626;
+        background-color:aliceblue;
+        /* border-top-right-radius: 30px;
+        border-bottom-right-radius: 30px; */
+        border-radius: 20%;
+        font-weight: bolder;
+}
+.div-following{
+
+    display: flex;
+    flex-direction: row;
+    flex-wrap: nowrap;
+    justify-content: flex-start;
+    align-items: stretch;
+    align-content: stretch;
+     /* background-color: aliceblue; */
+     position: relative;
+     border-radius:20px;
+     width:40%;
+     color: #262626;
+     /* background-color:red; */
+    padding-top:2%;
+     text-align: center;
+     height:100%;
+     /* margin-right:20% */
+     font-weight: bolder
    
+    };
+
+ /* .btn-following { */
+    /* padding:60%; */
+    /* position: relative;
+    font-size: 300px;
+       right: 50%;
+        width:100%;
+        height: 100%;
+        color: #262626;
+        background-color:rgb(11, 216, 11); */
+        
+        /* padding-right: 80%;   */
+    /* } */
+ 
 
 #profile-container{
     background-color:aliceblue;
@@ -437,17 +479,7 @@ width:10%
     width:150px;
     height: 50px;
 }
-#btn-follow{ width:110px; margin:1px;
-      border-color: #262626;
-      background-color:azure;
-    }
-#btn-count{
-    width:3px;
-    margin: 1px;
-    background-color: rgb(164, 99, 19);
-    border-color: #262626 ;
-  
-}
+
 #count-div{
     display: flex;
     flex-direction: row;
@@ -555,13 +587,13 @@ margin-left: 10px;
                 </div>
                 {% endif %}
         </div>
-     
+    
         <div class="body">
                   {% block body %}
                   {% endblock %}
         </div>
 
-
+ 
       
 
       
@@ -572,41 +604,3 @@ margin-left: 10px;
     
 </html>
 
-
-
-            <!-- <div class="nav-container">
-                        <div class="brand">
-                            <a href="#">Network</a>
-                        </div>
-                        <nav>
-                            <div class="nav-mobile">
-                                <a href="#" id="nav-toggle">
-                                    <span></span>
-                                </a>
-                            </div>
-                            <ul class="nav-list">
-                                {% if user.is_authenticated %}
-                                <li><a id="username" href="#">{{ user.username }}</a></li>
-                                
-                            
-                            
-                                <li><a id="posts-posts" href="">All Posts</a></li>
-                                
-                                <li><a id="following_url" href="#following-post-container">Following</a></li>
-                            
-                                <li><a href="{% url 'logout' %}">Log out</a></li>
-                                {% else %}
-                                
-                                <li><a href="{% url 'login' %}">Log In</a></li>
-                                <li><a href="{% url 'register' %}">Register</a></li>
-                                {% endif %} -->
-                                <!-- <ul class="nav-dropdown">
-                                    <li><a href="#">Link 1</a></li>
-                                    <li><a href="#">Link 1</a></li>
-                                    <li><a href="#">Link 1</a></li>
-                                </ul> -->        
-                            
-                            <!-- </ul>
-                        </nav>
-                    </div>
- -->

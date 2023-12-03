@@ -19,22 +19,31 @@ function post_list() {
  
 //  create post here
  document.addEventListener('DOMContentLoaded',function() {
-       const form_btn = document.getElementById('#form-btn');
+       const form_btn = document.getElementById('form-button');
        const textarea=document.getElementById('#textarea');
-      // form_btn.Disabled=true;
-      // if(textarea.value>1){
+       console.log(form_btn);
+       form_btn.Disabled=true;
+      //  if(textarea.value.length>2){
   
-      //     form_btn.disabled=false
+      // form_btn.disabled=false
       // }
       
       const post=document.getElementById("post-form")
       console.log(post)
-      post.onsubmit=(e)=>{
+      form_btn.onclick=(e)=>{
         e.preventDefault();
-        e.stopPropagation();
+        // e.stopPropagation();
       const textarea=document.getElementById('textarea').value
       console.log(textarea)
-    
+      console.log(textarea.length)
+      // form_btn.disabled=true
+      if (textarea.length>5){
+        form_btn.disabled=false
+      }
+      else{
+        form_btn.disabled=true
+      }
+
       fetch('/create_post',
           {  headers: {
             'Accept': 'application/json',
@@ -47,7 +56,7 @@ function post_list() {
                         console.log(data) ;
                       
             });
-            window.location.reload()
+            // window.location.reload()
           }
       
         })
@@ -105,12 +114,31 @@ document.addEventListener('DOMContentLoaded', function(){
               username.appendChild(document.createTextNode(user));
               const btn_follow=document.getElementById('btn-follow');
               const btn_unfollow=document.getElementById('btn-unfollow');
+              const following_btn=document.querySelector('.following-button');
+
+              console.log(following_btn);
               btn_follow.setAttribute('data-follow',user_id)
               btn_unfollow.setAttribute('data-unfollow',user_id)
+              following_btn.setAttribute('data-following',user_id)
              const idof_user=JSON.parse(document.getElementById('user_id').textContent);
               console.log(idof_user)
   
              
+              if (idof_user !=user_id){
+                btn_follow.style.display="block"
+                btn_unfollow.style.display="block"
+                following_btn.style.display='block'
+
+                }
+                else{
+                 
+                  btn_follow.innerHTML='Followers'
+                  btn_unfollow.style.display="none"
+                  following_btn.style.display='block'
+                }
+
+
+
                for(var i=0; i<data.length; i++){
            
 
@@ -119,19 +147,10 @@ document.addEventListener('DOMContentLoaded', function(){
                   const post_id=data[i]['id']
                   const  user_id=data[i]['user_id']
 
-                  if (idof_user !=user_id){
-                  btn_follow.style.display="block"
-                  btn_unfollow.style.display="block"
-
-                  }
-                  else{
-                    btn_follow.style.display="none"
-                    btn_unfollow.style.display="none"
-                  }
-
                   const profile_box=document.createElement('div');
                   profile_box.setAttribute('id', 'profile-box');
-                  const posts=document.querySelector('#all-posts');
+                  // const posts=document.querySelector('#all-posts');
+                  const posts=document.querySelector(`[data-posts='${profile_id}']`);
                   console.log(posts)
                   const clone=posts.cloneNode(true) ;
                   console.log(clone)
@@ -140,29 +159,35 @@ document.addEventListener('DOMContentLoaded', function(){
                    clone.querySelector('#username-link').innerHTML = user                
                    clone.querySelector('#username-link').setAttribute('data-profile',user_id)               
                    clone.querySelector('#post-txt').innerHTML =text_field
-                   clone.querySelector('#post-date').innerHTML =date             
-                   clone.querySelector('.btn-like-img').setAttribute('data-img',post_id)
-                   if( clone.querySelector('#btn-edit') ){
-                   clone.querySelector('#btn-edit').setAttribute('data-edit',post_id)}
-                   if( clone.querySelector('#btn-delete') ){  
-                   clone.querySelector('#btn-delete').setAttribute('data-delete',post_id)}
+                   clone.querySelector('#post-date').innerHTML =date   
+                   const id_check=JSON.parse(document.getElementById('user_id').textContent)
+                   console.log(id_check)
+                   console.log(user_id)
+                   clone.querySelector('.btn-like-img').setAttribute('data-img',post_id)     
+                   if(user_id===id_check){    
+                   clone.querySelector('#btn-edit').setAttribute('data-edit',post_id)
+                   clone.querySelector('#btn-delete').setAttribute('data-delete',post_id)
                    clone.querySelector('#btn-comment').setAttribute('btn-comments',post_id)
+                   }
+                   else{
                    if( clone.querySelector('#btn-like')){
                    clone.querySelector('#btn-like').setAttribute('data-like',post_id)}
-                   if(clone.querySelector('#btn-unlike')){
-                   clone.querySelector('#btn-unlike').setAttribute('data-unlike',post_id)}
+                   if(  clone.querySelector('#btn-like')){
+                   clone.querySelector('#btn-like').setAttribute('data-like',post_id)}
+                   if(clone.querySelector('#btn-comment')){
+                   clone.querySelector('#btn-comment').setAttribute('btn-comments',post_id)}
+                   }
                    clone.querySelector('#comment-box').setAttribute('data-comment',post_id)
                    clone.querySelector('#comment-form').setAttribute('data-form',post_id)
                    clone.querySelector('#comment-area').setAttribute('data-textarea',post_id)
                    clone.querySelector('#comment-input').setAttribute('data-put',post_id)
                    clone.querySelector('#comment-post').setAttribute('data-cpost',post_id)
+                 
 
 
                     
 
-                //  user_post2.appendChild(document.createTextNode(text_field));
-                //  user_post3.appendChild(document.createTextNode(date));
-                //  profile_box.append(user_post2, user_post3,edit,like,unlike,delete_post,comment,comment_box);
+                
              
                 profile_box.append(clone);
                
@@ -171,6 +196,10 @@ document.addEventListener('DOMContentLoaded', function(){
                 all_profile.appendChild(profile_box);
                  
 }
+
+
+
+
 
   })
 
@@ -181,11 +210,17 @@ document.addEventListener('DOMContentLoaded', function(){
     const following=data['following'];
     const follower=data['follower'];
     const follower_count=document.getElementById('btn-count');
-    const following_count=document.getElementById('btn-following');
-    follower_count.appendChild(document.createTextNode(follower));
-    following_count.appendChild(document.createTextNode(following)) })
+    // const following_count=document.getElementById('btn-following');
+    const following_count=document.querySelector('.flw-btn');
+    console.log(following_count);
+    follower_count.append(document.createTextNode(follower));   
+    following_count.append(document.createTextNode(following))
+    console.log(following_count);
+    console.log(follower_count)
+  
+  })
 }})
-// }
+
  })
 
 document.addEventListener('DOMContentLoaded',function() {
@@ -336,54 +371,41 @@ document.addEventListener('DOMContentLoaded',function(){
 
   // inssert event listeners here
   const following=document.querySelector('#following_url');
-  following.onclick=()=>{
-    // e.preventDefault();
-    // e.stopPropagation();
+  following.onclick=(e)=>{
+    e.preventDefault();
+    e.stopPropagation();
     document.getElementById('create-post').style.display="none";
     document.getElementById('post-container').style.display="none";
     document.getElementById('following-post-container').style.display="block";
     // getElementById('following-post-container').style.display="block";
     document.getElementById('profile-container').style.display="none";
     document.getElementById('edit-post').style.display="none";     
-    document.getElementById('user-following').style.display="block";                  
-  
-
+    // document.getElementById('user-following').style.display="block";                  
  ;} //this is the end dont forget 
 
 });
 
-// for like view here
+
+// LIKE AND UNLIKE VIEW STARTS HERE
 document.addEventListener('DOMContentLoaded',function(){
 
-  const like=document.querySelectorAll('#btn-like');
-  console.log(like);
- like.forEach((like)=>{ like.onclick=function(event){
-  event.preventDefault();
-  event.stopPropagation();
-  const id=event.target.getAttribute('data-like'); 
-  console.log(id);
-    fetch(`${id}/like`,{method:'POST',body:JSON.stringify({id: `${id}`})})
-    .then(response=>response.json())
-    .then(data=>{
-      console.log(data)
-
-     
- window.location.reload();
-      })
-       
-
-}})
-  // }
-})
-
-
-// like_count view here
-document.addEventListener('DOMContentLoaded',function(){
-
-  like=document.querySelectorAll('.btn-like-img');
-  console.log(like);
+  const like_count=document.querySelectorAll('.btn-like-img');
+  console.log(like_count);
   // console.log(like.getAttribute('data-like'));
-  like.forEach(like=>{const like_id=like.getAttribute('data-img');
+  like_count.forEach(like=>{const like_id=like.getAttribute('data-img');
+  if(localStorage.getItem('like_id')){
+  console.log(localStorage.getItem('like_id'));
+  console.log('local')
+  const count_div=document.querySelector(`[data-img='${like_id}']`); 
+  const btn_count=document.createElement('div');
+  btn_count.setAttribute('id','like-image');
+  btn_count.appendChild(document.createTextNode(localStorage.getItem('like_id')));
+ console.log(btn_count);
+  console.log(count_div)
+   count_div.querySelector('.count-display').replaceWith(btn_count)
+  console.log(count_div)
+ } // the if part ends here
+ else{
   if(typeof (like_id) !=='null'){
     console.log(like_id)
     fetch(`${like_id}/like`)
@@ -398,36 +420,96 @@ document.addEventListener('DOMContentLoaded',function(){
         const btn_count=document.createElement('div');
         btn_count.setAttribute('id','like-image');
         btn_count.appendChild(document.createTextNode(count))
-        count_div.appendChild(btn_count)
+        const count_display=document.createElement('.count-display');
+        count_display.querySelector('.count_display').append(btn_count)
+         localStorage.setItem('like-id',count) 
       }
-     });
-  }
-  })
+      })
+ }
+ } //the else part ends here
 
-})
-// unlike view here
-document.addEventListener('DOMContentLoaded',function(){
+}) // the count localstorage part ends here 
 
-//  const unlike= document.getElementById('btn-unlike')
-const user_id=JSON.parse(document.getElementById('user_id').textContent);
-console.log(user_id)
-
- const unlike=document.querySelectorAll('#btn-unlike')
- console.log(unlike)
-unlike.forEach((unlike)=>{ unlike.onclick=(event)=>{
-//  unlike.onclick=(event) =>{
-  console.log('unlike clicked')
-   event.stopPropagation()
-   event.preventDefault()
-  id=event.target.dataset.unlike
+var like_toggle= document.querySelectorAll('#btn-like');
+console.log(like_toggle)
+like_toggle.forEach((like_toggle)=>{
+  const id=like_toggle.getAttribute('data-like')
   console.log(id)
-  fetch(`${id}/unlike`)
-  .then(response => response)
-  .then(data =>{
-    console.log(data)
-   
-  })
-  window.location.reload()
+  console.log(localStorage.getItem(id))
+  if(localStorage.getItem(id)){
+  const id=like_toggle.getAttribute('data-like')
+  like_toggle.innerHTML=localStorage.getItem(id)}
+})
+
+
+// const like=document.querySelectorAll('#btn-like');
+console.log(like_toggle)
+ like_toggle.forEach(like=>{ like.onclick= async(event)=>{
+  event.preventDefault();
+  event.stopPropagation();
+  console.log(event.target.innerHTML);
+  var id=event.target.getAttribute('data-like'); 
+  console.log(id)
+  
+  if(event.target.innerHTML==='Like'){
+  console.log('like clicked')
+  console.log(id);
+   await fetch(`${id}/like`,{method:'POST',body:JSON.stringify({id: `${id}`})})
+    .then(response=>response.json())
+    .then(data=>{
+      console.log(data)   
+      event.target.innerHTML='Unlike';
+//  window.location.reload();
+      })
+      localStorage.setItem('like','Like');
+    } //the if line ends here
+    else{
+      console.log('unlike clicked')
+     console.log(id)
+    await fetch(`${id}/unlike`)
+     .then(response => response)
+     .then(data =>{
+      event.target.innerHTML='Like'
+       console.log(data)})
+
+     localStorage.setItem('unlike','Unlike')
+    }  //else part endes here
+    like=document.querySelectorAll('.btn-like-img');
+    console.log(like);
+    // console.log(like.getAttribute('data-like'));
+    like.forEach(like=>{const like_id=like.getAttribute('data-img');
+    if(typeof (like_id) !=='null'){
+      console.log(like_id)
+      fetch(`${like_id}/like`)
+      .then(response=>response.json())
+      .then(data=>{
+        console.log(data)
+          const count=data['like_count']
+          console.log(count)
+        //  if(count>0){
+          const count_div=document.querySelector(`[data-img='${like_id}']`); 
+         
+          const btn_count=document.createElement('div');
+          btn_count.setAttribute('id','like-image');
+          // btn_count.appendChild(document.createTextNode(count))
+          console.log(btn_count)
+          console.log(count_div)
+         
+          count_div.append(btn_count)
+          count_div.querySelector('#like-image').innerHTML = count
+          localStorage.setItem('like_id',count)
+        // }
+       }); 
+    }
+    })// like_id part ends here
+const like_toggle= document.querySelectorAll('#btn-like');
+console.log(like_toggle)
+like_toggle.forEach((like_toggle)=>{
+  const id=like_toggle.getAttribute('data-like')
+  const like_status=like_toggle.innerHTML
+  localStorage.setItem(id,like_status)
+}) //like_toggle ends here
+
 }})
 
 })
@@ -449,6 +531,7 @@ document.addEventListener('DOMContentLoaded',function(){
   }
 
 })
+
 // unfollow view here
 document.addEventListener('DOMContentLoaded',function(){
 
@@ -466,165 +549,3 @@ document.addEventListener('DOMContentLoaded',function(){
 
 })
 
-
-
-  // fetch('/following_post')
-  // .then(response=>response.json())
-  // .then(data=>{console.log(data);
-  //    for(let i=0; data.length; i++){
-  //     const user_following = document.getElementById('user-following');
-  //     console.log(user_following)
-  //     const text_field=data[i]['text_field']
-  //     const date=data[i]['date_created_on']
-  //     const post_id=data[i]['id']
-  //     const  user_id=data[i]['user_id']
-  //     const user=data[i]['user']
-
-
-  //     const profile_box=document.createElement('div');
-  //     profile_box.setAttribute('id', 'profile-box');
-  //     const posts=document.querySelector('#all-posts');
-  //     // const posts=document.querySelector('#post-container');
-  //     console.log(posts)
-  //     const clone=posts.cloneNode(true) ;
-  //     console.log(clone)
-  //     // user_following.append(clone)
-     
-     
-  //      clone.querySelector('#username-link').innerHTML = user                
-  //      clone.querySelector('#username-link').setAttribute('data-profile',user_id)               
-  //      clone.querySelector('#post-txt').innerHTML =text_field
-  //      clone.querySelector('#post-date').innerHTML =date             
-  //      clone.querySelector('.btn-like-img').setAttribute('data-img',post_id)
-  //      if( clone.querySelector('#btn-edit') ){
-  //      clone.querySelector('#btn-edit').setAttribute('data-edit',post_id)}
-  //      if( clone.querySelector('#btn-delete') ){  
-  //      clone.querySelector('#btn-delete').setAttribute('data-delete',post_id)}
-  //      clone.querySelector('#btn-comment').setAttribute('btn-comments',post_id)
-  //      if( clone.querySelector('#btn-like')){
-  //      clone.querySelector('#btn-like').setAttribute('data-like',post_id)}
-  //      if(clone.querySelector('#btn-unlike')){
-  //      clone.querySelector('#btn-unlike').setAttribute('data-unlike',post_id)}
-  //      clone.querySelector('#comment-box').setAttribute('data-comment',post_id)
-  //      clone.querySelector('#comment-form').setAttribute('data-form',post_id)
-  //      clone.querySelector('#comment-area').setAttribute('data-textarea',post_id)
-  //      clone.querySelector('#comment-input').setAttribute('data-put',post_id)
-  //      clone.querySelector('#comment-post').setAttribute('data-cpost',post_id)
-  //      user_following.append(clone)
-
-  //    }
-  // })
-
-
-
-
-
-
-// const user_post1=document.createElement('div');
-// user_post1.setAttribute('id', 'user-post1');
-// const user_post2=document.createElement('div');
-// user_post2.setAttribute('id', 'user-post2');
-// const user_post3=document.createElement('div');
-// user_post3.setAttribute('id', 'user-post3');
-// const profile_box=document.createElement('div');
-// profile_box.setAttribute('id', 'profile-box');
-// const edit=document.createElement('div');
-// edit.setAttribute('id', 'btn-edit');
-// edit.setAttribute('data-edit',`${id}`);
-// const like=document.createElement('div');
-// like.setAttribute('id', 'btn-like');
-// like.setAttribute('data-like',`${id}`);
-// const unlike=document.createElement('div');
-// unlike.setAttribute('id', 'btn-unlike');
-// unlike.setAttribute('data-unlike',`${id}`);
-// const delete_post=document.createElement('div');
-// delete_post.setAttribute('id', 'btn-delete');
-// delete_post.setAttribute('data-delete',`${id}`);
-// const comment=document.createElement('div');
-// comment.setAttribute('id', 'btn-comment');
-// comment.setAttribute('data-comments',`${id}`);
-// const comment_box=document.createElement('div');
-// comment_box.setAttribute('id', 'comment-box');
-// comment_box.setAttribute('data-comment',`${id}`);
-// const textarea=document.createElement('div');
-// textarea.setAttribute('id', 'comment-area');
-// textarea.setAttribute('data-textarea',`${id}`);
-// textarea.setAttribute('placeholder','comment');
-// const input=document.createElement('div');
-// input.setAttribute('id', 'comment-input');
-// input.setAttribute('data-put',`${id}`);
-// input.setAttribute('type','submit');
-// input.setAttribute('value','post');
-// const comment_post=document.createElement('div');
-// comment_post.setAttribute('id', 'comment-post');
-// comment_post.setAttribute('data-cpost', `${id}`);
-
-
-
-
-  // fetch('/following_post')
-  // .then(response=>response.json())
-  // .then(data=>{console.log(data);
-    
-  //   var length = data.length;
-
-
-  //    for(let i=0; data.length; i++){
-  //     const user_following = document.getElementById('user-following');
-  //     console.log(user_following)
-  //     const text_field=data[i]['text_field']
-  //     const date=data[i]['date_created_on']
-  //     const post_id=data[i]['id']
-  //     const  user_id=data[i]['user_id']
-  //     const user=data[i]['user']
-
-
-  //     const profile_box=document.createElement('div');
-  //     profile_box.setAttribute('id', 'profile-box');
-  //     const posts=document.querySelector('#all-posts');
-  //     // const posts=document.querySelector('#post-container');
-  //     console.log(posts)
-  //     const clone=posts.cloneNode(true) ;
-  //     console.log(clone)
-  //     // user_following.append(clone)
-     
-     
-  //      clone.querySelector('#username-link').innerHTML = user                
-  //      clone.querySelector('#username-link').setAttribute('data-profile',user_id)               
-  //      clone.querySelector('#post-txt').innerHTML =text_field
-  //      clone.querySelector('#post-date').innerHTML =date             
-  //      clone.querySelector('.btn-like-img').setAttribute('data-img',post_id)
-  //      if( clone.querySelector('#btn-edit') ){
-  //      clone.querySelector('#btn-edit').setAttribute('data-edit',post_id)}
-  //      if( clone.querySelector('#btn-delete') ){  
-  //      clone.querySelector('#btn-delete').setAttribute('data-delete',post_id)}
-  //      clone.querySelector('#btn-comment').setAttribute('btn-comments',post_id)
-  //      if( clone.querySelector('#btn-like')){
-  //      clone.querySelector('#btn-like').setAttribute('data-like',post_id)}
-  //      if(clone.querySelector('#btn-unlike')){
-  //      clone.querySelector('#btn-unlike').setAttribute('data-unlike',post_id)}
-  //      clone.querySelector('#comment-box').setAttribute('data-comment',post_id)
-  //      clone.querySelector('#comment-form').setAttribute('data-form',post_id)
-  //      clone.querySelector('#comment-area').setAttribute('data-textarea',post_id)
-  //      clone.querySelector('#comment-input').setAttribute('data-put',post_id)
-  //      clone.querySelector('#comment-post').setAttribute('data-cpost',post_id)
-  //      user_following.append(clone)
-
-  //    }
-  // })
-
-
-
-  // function edit_edit(){
-//   const div1=document.querySelectorAll('[data-data]');
-//   console.log(div1);
-//   div1.onsubmit=function(event){
-//   const id=event.target.getAttribute('data-data')
-//    const texter=document.querySelector('#textarea')
-//    fetch(`${id}/update`,
-//         {method: 'PUT', body:json.stringify({text_field:texter})})
-//         console.log('method')
-//         .then(response => response.json())
-//         .then(data =>{console.log(data)})
-//         ;}
-// }
