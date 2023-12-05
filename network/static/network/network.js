@@ -37,12 +37,7 @@ function post_list() {
       console.log(textarea)
       console.log(textarea.length)
       // form_btn.disabled=true
-      if (textarea.length>5){
-        form_btn.disabled=false
-      }
-      else{
-        form_btn.disabled=true
-      }
+    
 
       fetch('/create_post',
           {  headers: {
@@ -56,14 +51,12 @@ function post_list() {
                         console.log(data) ;
                       
             });
-            // window.location.reload()
+             window.location.reload()
           }
       
         })
 
-function reference(){
-  const edit=document.getElementById('')
-}
+
 
 // delete view here
 document.addEventListener('DOMContentLoaded', function(){
@@ -106,26 +99,25 @@ document.addEventListener('DOMContentLoaded', function(){
   .then(response => response.json())
   .then(data =>{console.log(data)
               const user=data['profile'][0]['user']; 
-              console.log(user)
               const user_id=data['profile'][0]['user_id'];
               const id=data['profile'][0]['id'];
               const following=data['following'];
-              console.log(following)
+           
  
 
               const username=document.getElementById('user-name-div');
-              console.log(username);
+             
               username.appendChild(document.createTextNode(user));
               const btn_follow=document.getElementById('btn-follow');
               const btn_unfollow=document.getElementById('btn-unfollow');
               const following_btn=document.querySelector('.following-button');
 
-              console.log(following_btn);
+            
               btn_follow.setAttribute('data-follow',user_id)
               btn_unfollow.setAttribute('data-unfollow',user_id)
               following_btn.setAttribute('data-following',user_id)
              const idof_user=JSON.parse(document.getElementById('user_id').textContent);
-              console.log(idof_user)
+             
   
              
               if (idof_user !=user_id && following==true){
@@ -153,7 +145,7 @@ document.addEventListener('DOMContentLoaded', function(){
            
 
                   const text_field=data['profile'][i]['text_field']
-                  console.log(text_field)
+                
                   const date=data['profile'][i]['date_created_on']
                   const post_id=data['profile'][i]['id']
                   const  user_id=data['profile'][i]['user_id']
@@ -162,23 +154,19 @@ document.addEventListener('DOMContentLoaded', function(){
                   profile_box.setAttribute('id', 'profile-box');
                   // const posts=document.querySelector('#all-posts');
                   const posts=document.querySelector(`[data-posts='${profile_id}']`);
-                  console.log(posts)
                   const clone=posts.cloneNode(true) ;
-                  console.log(clone)
-
                  
                    clone.querySelector('#username-link').innerHTML = user                
                    clone.querySelector('#username-link').setAttribute('data-profile',user_id)               
                    clone.querySelector('#post-txt').innerHTML =text_field
                    clone.querySelector('#post-date').innerHTML =date   
                    const id_check=JSON.parse(document.getElementById('user_id').textContent)
-                   console.log(id_check)
-                   console.log(user_id)
+    
                    clone.querySelector('.btn-like-img').setAttribute('data-img',post_id)     
                    if(user_id===id_check){    
-                   clone.querySelector('#btn-edit').setAttribute('data-edit',post_id)
-                   clone.querySelector('#btn-delete').setAttribute('data-delete',post_id)
-                   clone.querySelector('#btn-comment').setAttribute('btn-comments',post_id)
+                   clone.querySelector('#btn-edit').setAttribute('data-edit', post_id)
+                   clone.querySelector('#btn-delete').setAttribute('data-delete', post_id)
+                   clone.querySelector('#btn-comment').setAttribute('data-comments', post_id)
                    }
                    else{
                    if( clone.querySelector('#btn-like')){
@@ -186,7 +174,7 @@ document.addEventListener('DOMContentLoaded', function(){
                    if(  clone.querySelector('#btn-like')){
                    clone.querySelector('#btn-like').setAttribute('data-like',post_id)}
                    if(clone.querySelector('#btn-comment')){
-                   clone.querySelector('#btn-comment').setAttribute('btn-comments',post_id)}
+                   clone.querySelector('#btn-comment').setAttribute('data-comments',post_id)}
                    }
                    clone.querySelector('#comment-box').setAttribute('data-comment',post_id)
                    clone.querySelector('#comment-form').setAttribute('data-form',post_id)
@@ -198,7 +186,7 @@ document.addEventListener('DOMContentLoaded', function(){
                
 
                 const all_profile=document.getElementById('all-profile');
-                all_profile.appendChild(profile_box);
+                all_profile.append(profile_box);
                  
 }
 
@@ -312,34 +300,9 @@ else{
 
  })
 
-//  COMMENT VIEW STARTS HERE
-document.addEventListener('DOMContentLoaded',function() {
-
-  const comment_form=document.querySelectorAll('[data-form]')
-  console.log(comment_form)
-  comment_form.forEach((comment_form)=>{comment_form.onsubmit=(event) => {
-    // event.preventDefault();
-    event.stopPropagation();
-   id=event.target.getAttribute('data-form');
-   console.log('id')
-   
-    const commentarea = document.querySelector(`[data-textarea='${id}']`).value;
-    console.log(commentarea)
-    fetch(`${id}/create_comment`, {method:'POST', body:JSON.stringify({comment:`${commentarea}`})})
-          .then(response => response.json())
-          .then(data => { console.log(data)
-            window.location.reloaed();
-          })  
-          window.location.reloaed();
-      
-
-        }});
- 
-        
-
-});
 
 
+// COMMENT VIEW STARTS HERE
 document.addEventListener('DOMContentLoaded',function() {
 // function comment() {
 
@@ -353,7 +316,7 @@ console.log(comment_list);
 comment_list.forEach((comment_list)=>{ comment_list.onclick=(event)=>{
   event.preventDefault();
   event.stopPropagation();
-  id=event.target.getAttribute('data-comments');
+ var id=event.target.getAttribute('data-comments');
   console.log(id);
 document.querySelector(`[data-comment='${id}']`).style.display="block";
 
@@ -362,6 +325,7 @@ document.querySelector(`[data-comment='${id}']`).style.display="block";
  .then(data=>{console.log(data);
   console.log(data.length);
   
+ 
   for(var i=0; i< data.length; i++){
     console.log(data.length)
           const commenter1=data[i]['current_user']
@@ -370,24 +334,60 @@ document.querySelector(`[data-comment='${id}']`).style.display="block";
           const date=data[i]['date']
           console.log(comment)
           const comment_post=document.querySelector(`[data-cpost="${id}"]`);
-          const comment_commenter=document.createElement('div');
-          comment_commenter.setAttribute('id','cmnt-name')
-          const comment_comment=document.createElement('div');
-          comment_comment.setAttribute('id','cmnt-text');
-          const comment_date=document.createElement('div');
-          comment_date.setAttribute('id','cmnt-date')
-          const comment_container=document.createElement('div');
-          comment_container.setAttribute('id','cmnt-container')
-          console.log(comment_comment)
-          comment_commenter.appendChild(document.createTextNode(`${commenter}  :`))
-          comment_comment.appendChild(document.createTextNode(comment))
-          comment_date.appendChild(document.createTextNode(date))
-          comment_container.append(comment_commenter,comment_comment,comment_date)
-          comment_post.append(comment_container)
-          // comment_post.append(comment_commenter,comment_comment,comment_date)
-          console.log(comment_comment)}
+          const comment_container=document.querySelector(`[data-container="${id}"]`);
+          clone=comment_container.cloneNode(true);
+          clone.querySelector('#cmnt-name').append(document.createTextNode(commenter))     
+          clone.querySelector('#cmnt-text').append(document.createTextNode(comment))  
+          clone.querySelector('#cmnt-date').append(document.createTextNode(date))
+          comment_post.append(clone)
 
-        })  
+      
+          }
+  // } //function ends here
+ 
+  // WRITE A CODE FOR COMMETN
+  const comment_form=document.querySelector(`[data-form="${id}"]`) 
+  const input=document.querySelector(`[data-put="${id}"]`)
+  console.log(input)
+   
+  input.onclick=(event) => {
+        event.preventDefault();
+        event.stopPropagation();
+       
+        const commentarea = document.querySelector(`[data-textarea='${id}']`).value;
+        console.log(commentarea)
+        fetch(`${id}/create_comment`, {method:'POST', body:JSON.stringify({comment:`${commentarea}`})})
+              .then(response => response.json())
+              .then(data => { console.log(data)
+               
+                const comment_post=document.querySelector(`[data-cpost="${id}"]`);
+                comment_post.innerHTML=''
+                for(var i=0; i< data.length; i++){
+                const commenter1=data[i]['current_user']
+                const commenter=commenter1.toUpperCase();
+                const comment=data[i]['comment']
+                const date=data[i]['date']
+                console.log(comment)
+                const comment_post=document.querySelector(`[data-cpost="${id}"]`);
+                const comment_container=document.querySelector(`[data-container="${id}"]`);
+                clon=comment_container.cloneNode(true);
+            
+                
+                clon.querySelector('#cmnt-name').append(document.createTextNode(commenter))
+               
+                clon.querySelector('#cmnt-text').append(document.createTextNode(comment))
+                
+                clon.querySelector('#cmnt-date').append(document.createTextNode(date))
+      
+                comment_post.append(clon)
+                }
+
+              
+              })  
+            
+            }; //posting ends here
+
+        })  //exists
 
 }})
 
@@ -540,7 +540,7 @@ console.log(like_toggle)
       const count_div=document.querySelector(`[data-img='${id}']`); 
       (count_div)
       count_div.querySelector('.count-display').innerHTML =data['like_count'];
-//  window.location.reload();
+
       })
       // localStorage.setItem('like','Like');
     } 
@@ -562,44 +562,7 @@ console.log(like_toggle)
        
 
       })
-
-     
     }  
-
-    // ASSIGNS NEW COUNT VALUES
-    like=document.querySelectorAll('.btn-like-img');
-    console.log(like);
-    // console.log(like.getAttribute('data-like'));
-    like.forEach(like=>{const like_id=like.getAttribute('data-img');
-    // if(typeof (like_id) !=='null'){
-    //   console.log(like_id)
-    //   fetch(`${like_id}/like`)
-    //   .then(response=>response.json())
-    //   .then(data=>{
-    //     console.log(data)
-    //       const count=data['like_count']
-    //       console.log(count)
-    //       console.log(like_id)
-    //     //  if(count>0){
-    //       const count_div=document.querySelector(`[data-img='${like_id}']`); 
-         
-    //       count_div.querySelector('.count-display').innerHTML =count
-    //       localStorage.setItem('like_id',count)
-    //     //}
-    //    }); 
-    // }
-    })// like_id part ends here
-
-  // LOCALLY STORES LIKE AND UNLIKE STATUS
-const like_toggle= document.querySelectorAll('#btn-like');
-console.log(like_toggle)
-//  like_toggle.forEach((like_toggle)=>{
-//   const id=like_toggle.getAttribute('data-like')
-//   console.log(id)
-//   const like_status=like_toggle.innerHTML
-//   console.log(like_status)
-//   localStorage.setItem(id,like_status)
-// }) //like_toggle ends here
 
 }})
 
@@ -615,38 +578,3 @@ console.log(like_toggle)
 
 
 
-const like_count=document.querySelectorAll('.btn-like-img');
-//   console.log(like_count);
-//   // console.log(like.getAttribute('data-like'));
-//   like_count.forEach(like=>{const like_id=like.getAttribute('data-img');
-//   console.log(like_id);
-// //   if(localStorage.getItem('like_id')){
-// //   console.log(localStorage.getItem('like_id'));
-// //   console.log('local')
-// //   const count_div=document.querySelector(`[data-img='${like_id}']`); 
-
-// //    count_div.querySelector('.count-display').innerHTML=localStorage.getItem('like_id')
-// //   console.log(count_div)
-// //  } // the if part ends here
-
-
-// //  else{
-// //   if(typeof (like_id) !=='null'){
-// //     console.log(like_id)
-// //     fetch(`${like_id}/like`)
-// //     .then(response=>response.json())
-// //     .then(data=>{
-// //       console.log(data)
-// //         const count=data['like_count']
-// //         console.log(count)
-// //        if(count>0){
-// //         const count_div=document.querySelector(`[data-img='${like_id}']`); 
-       
-// //         count_div.querySelector('.count_display').innerHTML = count;
-// //          localStorage.setItem('like-id',count) 
-// //       }
-// //       })
-// //  }
-// //  } //the else part ends here
-
-// }) 

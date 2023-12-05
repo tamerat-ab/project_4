@@ -51,18 +51,7 @@
                               <button data-comments="{{post.id}}" id="btn-comment">Comments</button>
                               {% else %}
 
-                                      <!-- {% if post.like_set.all %}
-
-                                      {% for like in  post.like_set.all %}
-                                      {% if like.liking_user == user.id %}
-                                      <a data-like="{{post.id}}" id="btn-like" href=""> Unlike</a><br>
-                                      {% else %}
-                                      <a data-like="{{post.id}}" id="btn-like" href=""> Like</a><br>
-                                      {% endif %}
-                                      {% endfor %}
-                                      {% else %}
-                              <a data-like="{{post.id}}" id="btn-like" href=""> Like</a><br>
-                                      {% endif %} -->
+                                    
                             <a data-like="{{post.id}}" id="btn-like" href=""> Like</a><br>    
                               <button data-comments="{{post.id}}" id="btn-comment">Comments</button>
                               {% endif %}
@@ -73,17 +62,22 @@
                       <form data-form="{{post.id}}" id="comment-form">
                         
         
-                       <textarea data-textarea="{{post.id}}" name="comment" id="comment-area" cols="" rows="2" placeholder="comment"></textarea> 
+                       <textarea data-textarea="{{post.id}}" name="comment" id="comment-area" cols="" rows="2" placeholder="comment" required="true"></textarea> 
                       
                        <input data-put="{{post.id}}"  type="submit" value="post" name="" id="comment-input">
                     
                       </form>
                     
             
-
+                     <div data-alg="{{post.id}}" class="alg">
+                        <div data-container="{{post.id}}" id="container">
+                                <div id="cmnt-name"></div> 
+                                <div id="cmnt-text"></div>
+                                <div id="cmnt-date"></div>
+                        </div>
                       <div data-cpost="{{post.id}}" id="comment-post">
-                            
-                            
+                           
+                      </div>
                       </div>
               </div> 
       </div>
@@ -124,40 +118,26 @@
                      <div id="count-div"> 
                           <a data-img="{{page.id}}" id="{{page.user.username}}" class="btn-like-img" href="">
                             <img id="image" src="{% static 'network/heart.png' %}" alt="">
-                            <div class="count-display">
-
-                            </div>
+                            <div class="count-display"></div>
                           </a> 
                       </div>
                        
                       <div class="btn-div">
-                            <!-- <h1>{{page.id}}</h1> -->
+                           
                               {% if page.user.username == user.username %}
                               <a data-edit="{{page.id}}" id="btn-edit" href="#edit-post">edit</a>      
                               <a data-delete="{{page.id}}" id="btn-delete" href=""> Delete</a><br>
                               <button data-comments="{{page.id}}" id="btn-comment">Comments</button>
                               {% else %}
 
-                                        <!-- {% if page.like_set.all %}
-
-                                        {% for page in  page.like_set.all %}
-                                        {% if like.liking_user == user.id %}
-                                        <a data-like="{{page.id}}" id="btn-like" href=""> Unlike</a><br>
-                                        {% else %}
-                                        <a data-like="{{page.id}}" id="btn-like" href=""> Like</a><br>
-                                        {% endif %}
-                                        {% endfor %}
-                                        {% else %}
-                            
-                              <a data-like="{{page.id}}" id="btn-like" href=""> Like</a><br>
-                              {% endif %} -->
+                                   
                               <a data-like="{{page.id}}" id="btn-like" href=""> Like</a><br>
                               <button data-comments="{{page.id}}" id="btn-comment">Comments</button>
                               {% endif %}
                             
                       </div>
                      
-                      <div id="comment-box"  data-comment="{{page.id}}"> 
+                      <div id="comment-boX"  data-comment="{{page.id}}"> 
                               <form data-form="{{page.id}}" id="comment-form">
                                 
                 
@@ -168,11 +148,17 @@
                               </form>
                       
               
-  
+                              <div data-alg="{{page.id}}" class="alg">
+                                <div data-container="{{page.id}}" id="container">
+                                        <div id="cmnt-name"></div> 
+                                        <div id="cmnt-text"></div>
+                                        <div id="cmnt-date"></div>
+                                </div>
                               <div data-cpost="{{page.id}}" id="comment-post">
-                                    
-                                    
+                                   
                               </div>
+                              </div>
+
                        </div> 
           
              </div>    
@@ -219,8 +205,7 @@
                             
                               <div class="following-button">
                                   <div class="div-following"> Following  <div class="flw-btn"></div>    </div> 
-                                  <!-- <div class="btn-following"> hello</div>  -->
-                                  <!-- <div class="flw-btn">hi</div>    -->
+                                
                               </div> 
                                                       
                       </div>                     

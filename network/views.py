@@ -347,15 +347,28 @@ def create_comment(request,post_id):
         post=Posts.objects.filter(id=post_id)[0]
         comment2=Comment(post=post,comment=comment1,current_user=user)
         comment2.save()
-        return HttpResponseRedirect(reverse('index'))
-        # return JsonResponse({'comment':comment2})
+        # return HttpResponseRedirect(reverse('index'))
+    
+
+
+    # if request.method == 'GET':
+    try:
+        users=User.objects.get(posts=post_id)
+        post=Posts.objects.get(id=post_id)
+        comment3=Comment.objects.filter(post=post).order_by('-id') ## ordering comments by id
+        # return JsonResponse([comment.serialize() for comment in comment])
+        return JsonResponse([comment.serialize() for comment in comment3],safe=False)
+        return JsonResponse({'comment':comment3})
+    except:
+        return JsonResponse({'comments':'no comment available'})
+      
     
 def comment(request, post_id):
         if request.method == 'GET':
             try:
                 users=User.objects.get(posts=post_id)
                 post=Posts.objects.get(id=post_id)
-                comment3=Comment.objects.filter(post=post) 
+                comment3=Comment.objects.filter(post=post).order_by('-id') #ordering comments by id
                 # return JsonResponse([comment.serialize() for comment in comment])
                 return JsonResponse([comment.serialize() for comment in comment3],safe=False)
                 return JsonResponse({'comment':comment3})
