@@ -16,7 +16,7 @@ def index(request):
     user=request.user
     posts = Posts.objects.all().order_by('-id')  # fetching all post objects from database
   
-    paginator = Paginator(posts, 2)
+    paginator = Paginator(posts, 10)
     page = request.GET.get('page1')
     try:
         page_obj = paginator.page(page)
@@ -42,7 +42,7 @@ def index(request):
         followed_posts+=post
   
     followed_posts   
-    paginator = Paginator(followed_posts, 1)
+    paginator = Paginator(followed_posts, 5)
     page = request.GET.get('page2')
     try:
         followed_posts = paginator.page(page)
@@ -137,17 +137,19 @@ def delete(request,post_id):
 
 
 def profile(request,user_id):
-    # followed=Follower.objects.filter(id=id)
-    # followers= followed.followed_number
-    # following=followed.followers_number
+    user=request.user
+    print(user)
     user_posts=Posts.objects.filter(user=user_id)
-    user=User.objects.get(id=user_id)
-    user_name=user
-    users_id=user_id
-    # return JsonResponse({'user_posts':user_posts, 'user_name':user_name, 'users_id':user_id})
-    return JsonResponse([posts.serialize() for posts in user_posts],safe=False)
-    # return render(request, 'network/index.html', {'user_posts':user_posts, 'user_name':user_name, 'users_id':user_id})
-    # return HttpResponseRedirect(reverse( 'network/index.html', args={user_posts:user_posts}))
+  
+    profile=[posts.serialize() for posts in user_posts]
+  
+    if Following.objects.filter(user=user, users_id=user_id):
+        return JsonResponse({'profile':profile, 'following':True})
+
+    else:
+        return JsonResponse({'profile':profile,'following':False})
+   
+   
 @csrf_exempt    
 def follow(request, users_id):
     user=request.user
@@ -156,7 +158,8 @@ def follow(request, users_id):
         data=json.loads(request.body)
         users_id=data.get('id')
         try:
-            followed_user=Following.objects.filter(user=user_id, users_id=users_id)
+            # followed_user=Following.objects.filter(user=user_id, users_id=users_id)
+            followed_user=Following.objects.filter(user=user, users_id=users_id)
             if followed_user.exists():
                 # return HttpResponseRedirect(reverse('profile', args=(users_id,)))
                 return JsonResponse({'followed_id':'id_exits'})
@@ -168,22 +171,30 @@ def follow(request, users_id):
             followed.save()
             following=Following(user=user,users_id=users_id)
             following.save()
-            # return HttpResponseRedirect(reverse('profile', args=(users_id,)))
-            return JsonResponse({'follow':'following'})
+            count_following =Following.objects.filter(user=user_followed).count()
+            count_follower=Follower.objects.filter(user=user_followed).count() 
+           # # return HttpResponseRedirect(reverse('profile', args=(users_id,)))
+            return JsonResponse({'follow':'following','following':count_following,'follower':count_follower})
         
 def count_follow(request,user_id):
-        count_following =len(Following.objects.filter(user=user_id))
-        count=Following.objects.filter(user=user_id)
-        count_follower=len(Follower.objects.filter(user=user_id))+1
-        # return render(request,'network/index.html',{'following':'count_following','follower':'count_follower','count':count})
+        
+        count_following =Following.objects.filter(user=user_id).count()
+        count=Following.objects.filter(user=user_id)  
+        count_follower=Follower.objects.filter(user=user_id).count()   
         return JsonResponse ({'following':count_following,'follower':count_follower})
      
 def unfollow(request, users_id):
     user=request.user
     user_id=user.id
-    unfollow=Following.objects.filter(user=user_id,users_id=users_id)
+    unfollow=Following.objects.filter(user=user,users_id=users_id)
     unfollow.delete()
-    return JsonResponse({'unfollow':'unfollow'})
+    user_followed=User.objects.filter(id=users_id)[0]
+    followed=Follower.objects.filter(user=user_followed,follower_id=user_id)
+    followed.delete()
+
+    count_following =Following.objects.filter(user=user_followed).count()
+    count_follower=Follower.objects.filter(user=user_followed).count() 
+    return JsonResponse({'unfollow':'unfollow','following':count_following,'follower':count_follower})
     # return HttpResponseRedirect(reverse('index'))
 
 
@@ -273,11 +284,16 @@ def like(request,post_id):
 
     if request.method == 'GET':
         post_liked=Posts.objects.filter(id=post_id)[0]
-        # print(post_liked)
-        # like_count=len(Like.objects.filter(post=post_liked))
-        like_count=Like.objects.filter(post=post_liked).count()
+        print(post_liked)
+        if Like.objects.filter(post=post_liked):
+            like=Like.objects.filter(post=post_liked)
+            liked=[like.serialize() for like in like]
+            like_count=Like.objects.filter(post=post_liked).count()
+            return JsonResponse({'like_count':like_count, 'like':liked}, status=200)
         # print(like_count)
-        return JsonResponse( {'like_count':like_count}, status=200)
+        else:
+           like_count=Like.objects.filter(post=post_liked).count()
+           return JsonResponse( {'like_count':like_count,'like':'none'}, status=200)
     
     # if request.method=='GET':
     #         post_liked=Posts.objects.filter(id=post_id)[0]
@@ -291,11 +307,13 @@ def unlike(request,post_id):
     post=Posts.objects.get(id=post_id)
     # print(post)
     user_liked=User.objects.get(posts=post)
-    get_user=Like.objects.get(liking_user=user.id, post=post)
+    get_user=Like.objects.get(liking_user=user.id, post=post, user=user_liked)
     # print(get_user)
     get_user.delete()
     # print(get_user)
-    return JsonResponse({'user':'disliked'})
+    like_count=Like.objects.filter(post=post).count()
+    return JsonResponse( {'like_count':like_count}, status=200)
+    # return JsonResponse({'user':'disliked'})
    
     # try:
       

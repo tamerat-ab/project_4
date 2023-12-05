@@ -18,11 +18,12 @@ class Posts(models.Model):
                "text_field":self.text_field ,
                  "date_created_on":self.date_created_on.strftime("%b %d %Y, %I:%M %p")}
     
-    
+ # this model represents the users followed the logged in user   
 class Follower(models.Model):
     user=models.ForeignKey(User, on_delete=models.CASCADE, null=True)
     follower_id=models.IntegerField()
 
+# this model represents the user as a follower
 class Following(models.Model):
     user=models.ForeignKey(User, on_delete=models.CASCADE)
     users_id=models.IntegerField(blank=False, null=False ,default=0)
@@ -32,6 +33,8 @@ class Like(models.Model):
     user=models.ForeignKey(User,on_delete=models.CASCADE)
     post=models.ForeignKey(Posts,on_delete=models.CASCADE)
     liking_user=models.IntegerField()
+    def serialize(self):
+        return{"user":self.user.username,'post':self.post.id, 'liking_user-id':self.liking_user}
 
 class Comment(models.Model):
     # user=models.ForeignKey(User, on_delete=models.CASCADE)
