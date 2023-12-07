@@ -20,13 +20,16 @@ function post_list() {
 //  create post here
  document.addEventListener('DOMContentLoaded',function() {
        const form_btn = document.getElementById('form-button');
-       const textarea=document.getElementById('#textarea');
        console.log(form_btn);
-       form_btn.Disabled=true;
-      //  if(textarea.value.length>2){
-  
-      // form_btn.disabled=false
-      // }
+       const textarea=document.getElementById('textarea');
+       console.log(textarea);
+       form_btn.disabled=true;
+       textarea.onkeyup=()=>{
+        if(textarea.value.length>0)
+         { form_btn.disabled=false}
+        else{form_btn.disabled=true}
+       }
+       console.log(form_btn)
       
       const post=document.getElementById("post-form")
       console.log(post)
