@@ -61,7 +61,7 @@ body {
     margin-top: -35px;
 }
 
-#create-post{
+#create-post,#edit-post{
     display: flex;
         flex-direction: column;
         flex-wrap: nowrap;
@@ -97,7 +97,7 @@ body {
         margin-left:30px
     }  
 
-#textarea
+#textarea,#textarea-edit
     {
         /* display: flex;
         flex-direction: row;
@@ -112,8 +112,10 @@ body {
         border-radius: 10px;
         /* border-radius: 10px; */
     }
-
-#form-button 
+#textarea-edit{
+    margin-bottom: 10px;
+}
+#form-button ,#form-button-edit
     {background-color:rgb(84, 60, 203);
         text-align: center;
     padding-bottom: -20px;
@@ -250,7 +252,7 @@ margin-left: 1%;
 
 width:10%
 }
-#btn-edit, #btn-delete, #btn-unlike,#btn-comment,#id1,#id2,#id3,#btn-like{
+#btn-edit, #btn-delete, #btn-unlike,#btn-comment,#id1,#id2,#id3,#btn-like,#btn-likep{
   
     height: 20px;
     background-color: rgb(169, 179, 188);
@@ -513,7 +515,7 @@ margin-left: 10px;
 margin-top: -28px;
 margin-left: 40px;
 }
-#btn-like-img{
+#btn-like-img,#btn-like-imgp{
     display: flex;
     flex-direction: row;
     flex-wrap: nowrap;
@@ -523,7 +525,7 @@ margin-left: 40px;
     position: relative;
     margin-left: 10px;
 }
-.count-display{
+.count-display,.count-displayp{
     margin-top: -26px;
     margin-left:40px
 }
