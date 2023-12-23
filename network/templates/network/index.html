@@ -28,7 +28,8 @@
       <div data-posts="{{post.user.id}}" id="all-posts">
 
               <div id="post-list">
-              
+                      
+
                       <button data-profile="{{post.user.id}}" id="username-link" >{{post.user.username}}</button> <br>
                     
                       <h3 id="post-txt">{{post.text_field}} </h3> <br>
@@ -115,10 +116,10 @@
                       <h3 id="post-txt">{{page.text_field}} </h3> <br>
                       <h3 id="post-date">{{page.date_created_on}} </h3> <br>
                  
-                     <div id="count-div"> 
-                          <a data-img="{{page.id}}" id="{{page.user.username}}" class="btn-like-img" href="">
+                     <div id="count-divP"> 
+                          <a data-img="p{{page.id}}" id="{{page.user.username}}" class="btn-like-imgP" href="">
                             <img id="image" src="{% static 'network/heart.png' %}" alt="">
-                            <div class="count-display"></div>
+                            <div class="count-displayp"></div>
                           </a> 
                       </div>
                        
@@ -127,36 +128,37 @@
                               {% if page.user.username == user.username %}
                               <a data-edit="{{page.id}}" id="btn-edit" href="#edit-post">edit</a>      
                               <a data-delete="{{page.id}}" id="btn-delete" href=""> Delete</a><br>
-                              <button data-comments="{{page.id}}" id="btn-comment">Comments</button>
+                              <button data-comments="p{{page.id}}" id="btn-comment">Comments</button>
                               {% else %}
 
                                    
-                              <a data-like="{{page.id}}" id="btn-like" href=""> Like</a><br>
+                              <a data-likep="{{page.id}}" id="btn-likep" href=""> Like</a><br>
                               <button data-comments="{{page.id}}" id="btn-comment">Comments</button>
                               {% endif %}
                             
                       </div>
                      
-                      <div id="comment-boX"  data-comment="{{page.id}}"> 
-                              <form data-form="{{page.id}}" id="comment-form">
+                      <div id="comment-box"  data-comment="p{{page.id}}"> 
+                              <form data-form="p{{page.id}}" id="comment-form">
                                 
                 
-                              <textarea data-textarea="{{page.id}}" name="comment" id="comment-area" cols="" rows="2" placeholder="comment"></textarea> 
+                              <textarea data-textarea="p{{page.id}}" name="comment" id="comment-area" cols="" rows="2" placeholder="comment"></textarea> 
                               
-                              <input data-put="{{page.id}}"  type="submit" value="post" name="" id="comment-input">
+                              <input data-put="p{{page.id}}"  type="submit" value="post" name="" id="comment-input">
                             
                               </form>
                       
               
-                              <div data-alg="{{page.id}}" class="alg">
-                                <div data-container="{{page.id}}" id="container">
+                              <div data-alg="p{{page.id}}" class="alg">
+                                <div data-container="p{{page.id}}" id="container">
                                         <div id="cmnt-name"></div> 
                                         <div id="cmnt-text"></div>
                                         <div id="cmnt-date"></div>
                                 </div>
-                              <div data-cpost="{{page.id}}" id="comment-post">
+                              <div data-cpost="p{{page.id}}" id="comment-post">
                                    
                               </div>
+                              
                               </div>
 
                        </div> 
@@ -215,9 +217,14 @@
 
 
 <div id=edit-post>
-         <h5>Post being edited ...</h5>
+         <h3>Post being edited ...</h3>
 
-                   
+           
+         <form id="post-form-edit">
+              
+          <textarea name="text_field" id="textarea-edit"  placeholder="write your post here"></textarea> <br>
+          <button id="form-button-edit" type="submit">post</button>
+       </form>       
 </div>
 
  
